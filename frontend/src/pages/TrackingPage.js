@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { ArrowLeft, Package, MapPin, Phone, Calendar, Truck, CheckCircle2 } from 'lucide-react';
-import { mockOrders } from '../mock/mockData';
+import { ordersAPI } from '../services/api';
 
 const TrackingPage = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [trackingCode, setTrackingCode] = useState('');
-  const [order, setOrder] = useState(orderId ? mockOrders.find(o => o.id === orderId) : null);
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrder(orderId);
+    }
+  }, [orderId]);
 
   const handleSearch = () => {
     const found = mockOrders.find(o => o.trackingCode === trackingCode || o.id === trackingCode);
