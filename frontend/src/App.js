@@ -11,6 +11,8 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import TrackingPage from './pages/TrackingPage';
 import NewShipmentPage from './pages/NewShipmentPage';
+import OrdersListPage from './pages/OrdersListPage';
+import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
 
 // Protected Route Component
