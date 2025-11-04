@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Package, Users, TrendingUp, DollarSign, LogOut, Search, MoreVertical } from 'lucide-react';
+import { Package, Users, TrendingUp, DollarSign, LogOut, Search, MoreVertical, Settings } from 'lucide-react';
 import { mockOrders, mockUsers, mockStats } from '../mock/mockData';
 
 const AdminPage = () => {
