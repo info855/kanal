@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSettings } from '../context/SettingsContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -8,6 +9,7 @@ import { mockShippingCompanies, mockPricing } from '../mock/mockData';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { settings } = useSettings();
 
   const features = [
     {
