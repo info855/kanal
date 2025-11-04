@@ -27,7 +27,7 @@ async def seed_database():
         shipping_companies = [
             {
                 "name": "PTT Kargo",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/ptt-kargo.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/ptt-kargo.png",
                 "price": 79.96,
                 "deliveryTime": "2-3 gün",
                 "isActive": True,
@@ -35,7 +35,7 @@ async def seed_database():
             },
             {
                 "name": "Aras Kargo",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/aras-kargo.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/aras-kargo.png",
                 "price": 85.50,
                 "deliveryTime": "1-2 gün",
                 "isActive": True,
@@ -43,7 +43,7 @@ async def seed_database():
             },
             {
                 "name": "Yurtiçi Kargo",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/yurtici-kargo.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/yurtici-kargo.png",
                 "price": 82.30,
                 "deliveryTime": "2-3 gün",
                 "isActive": True,
@@ -51,7 +51,7 @@ async def seed_database():
             },
             {
                 "name": "MNG Kargo",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/mng-kargo.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/mng-kargo.png",
                 "price": 78.90,
                 "deliveryTime": "2-4 gün",
                 "isActive": True,
@@ -59,7 +59,7 @@ async def seed_database():
             },
             {
                 "name": "Sürat Kargo",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/surat-kargo.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/surat-kargo.png",
                 "price": 89.00,
                 "deliveryTime": "1-2 gün",
                 "isActive": True,
@@ -67,7 +67,7 @@ async def seed_database():
             },
             {
                 "name": "HepsiJet",
-                "logo": "https://cdn.basitkargo.com/kargo-firmalari/hepsijet.png",
+                "logo": "https://cdn.enucuzakargo.com/kargo-firmalari/hepsijet.png",
                 "price": 91.20,
                 "deliveryTime": "1-2 gün",
                 "isActive": True,
@@ -80,12 +80,12 @@ async def seed_database():
         print(f"ℹ️  Shipping companies already exist ({existing_companies} found)")
     
     # Check if admin user exists
-    admin_exists = await db.users.find_one({"email": "admin@basitkargo.com"})
+    admin_exists = await db.users.find_one({"email": "admin@enucuzakargo.com"})
     if not admin_exists:
         print("👤 Creating admin user...")
         admin_user = {
             "name": "Admin User",
-            "email": "admin@basitkargo.com",
+            "email": "admin@enucuzakargo.com",
             "password": get_password_hash("admin123"),
             "phone": "+90 534 333 44 55",
             "company": "En Ucuza Kargo",
@@ -97,7 +97,7 @@ async def seed_database():
         }
         await db.users.insert_one(admin_user)
         print("✅ Admin user created")
-        print("   Email: admin@basitkargo.com")
+        print("   Email: admin@enucuzakargo.com")
         print("   Password: admin123")
     else:
         print("ℹ️  Admin user already exists")
