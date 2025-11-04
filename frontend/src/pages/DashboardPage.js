@@ -172,25 +172,31 @@ const DashboardPage = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {mockOrders.slice(0, 5).map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/dashboard/tracking/${order.id}`)}>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-                        <Package className="w-6 h-6 text-pink-600" />
+              {loading ? (
+                <div className="text-center py-8 text-gray-500">Yükleniyor...</div>
+              ) : orders.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">Henüz gönderi yok</div>
+              ) : (
+                <div className="space-y-4">
+                  {orders.map((order) => (
+                    <div key={order._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/dashboard/tracking/${order.orderId}`)}>
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <Package className="w-6 h-6 text-pink-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{order.orderId}</p>
+                          <p className="text-sm text-gray-500">{order.recipient.name} - {order.shippingCompany}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{order.id}</p>
-                        <p className="text-sm text-gray-500">{order.recipient} - {order.shippingCompany}</p>
+                      <div className="text-right">
+                        <Badge className={getStatusColor(order.status)}>{order.statusText}</Badge>
+                        <p className="text-sm text-gray-500 mt-1">{new Date(order.createdAt).toLocaleDateString('tr-TR')}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <Badge className={getStatusColor(order.status)}>{order.statusText}</Badge>
-                      <p className="text-sm text-gray-500 mt-1">{order.createdAt}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
