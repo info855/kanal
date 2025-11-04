@@ -355,22 +355,50 @@ const LandingPage = () => {
               </div>
               <p className="text-gray-400">{settings?.tagline || 'Kargo yönetiminde yeni nesil çözümler.'}</p>
             </div>
-            <div>
-              <h3 className="font-semibold mb-4">Şirket</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Hakkımızda</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">İletişim</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Kariyer</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Destek</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Yardım Merkezi</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API Dokümantasyon</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">SSS</a></li>
-              </ul>
-            </div>
+            {(settings?.footerSections?.length > 0 ? settings.footerSections : [
+              {
+                title: 'Şirket',
+                links: [
+                  { title: 'Hakkımızda', url: '/hakkimizda' },
+                  { title: 'İletişim', url: '/iletisim' },
+                  { title: 'Kariyer', url: '/kariyer' }
+                ]
+              },
+              {
+                title: 'Destek',
+                links: [
+                  { title: 'Yardım Merkezi', url: '/yardim' },
+                  { title: 'API Dokümantasyon', url: '/api-docs' },
+                  { title: 'SSS', url: '#faq' }
+                ]
+              }
+            ]).map((section, idx) => (
+              <div key={idx}>
+                <h3 className="font-semibold mb-4">{section.title}</h3>
+                <ul className="space-y-2 text-gray-400">
+                  {section.links?.map((link, linkIdx) => (
+                    <li key={linkIdx}>
+                      <a 
+                        href={link.url} 
+                        className="hover:text-white transition-colors"
+                        onClick={(e) => {
+                          if (link.url.startsWith('/#')) {
+                            e.preventDefault();
+                            const element = document.querySelector(link.url.substring(1));
+                            element?.scrollIntoView({ behavior: 'smooth' });
+                          } else if (link.url.startsWith('/') && !link.url.startsWith('/#')) {
+                            e.preventDefault();
+                            navigate(link.url);
+                          }
+                        }}
+                      >
+                        {link.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
             <div>
               <h3 className="font-semibold mb-4">İletişim</h3>
               <p className="text-gray-400">Telefon: {settings?.contact?.phone || '0850 308 52 94'}</p>
