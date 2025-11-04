@@ -1,0 +1,475 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Textarea } from '../components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { ArrowLeft, Settings, Save, Upload, Plus, Edit, Trash2 } from 'lucide-react';
+import { settingsAPI, shippingAPI } from '../services/api';
+import { toast } from '../hooks/use-toast';
+
+const AdminSettingsPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState(null);
+  const [shippingCompanies, setShippingCompanies] = useState([]);
+  const [editingCompany, setEditingCompany] = useState(null);
+
+  useEffect(() => {
+    if (user?.role !== 'admin') {
+      navigate('/dashboard');
+      return;
+    }
+    fetchData();
+  }, [user]);
+
+  const fetchData = async () => {
+    try {
+      const [settingsRes, companiesRes] = await Promise.all([
+        settingsAPI.get(),
+        shippingAPI.getAll({ include_inactive: true })
+      ]);
+      setSettings(settingsRes.data.settings);
+      setShippingCompanies(companiesRes.data.companies || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast({
+        title: 'Hata',
+        description: 'Ayarlar yüklenemedi',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    setSaving(true);
+    try {
+      await settingsAPI.update(settings);
+      toast({
+        title: 'Başarılı',
+        description: 'Ayarlar kaydedildi'
+      });
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Ayarlar kaydedilemedi',
+        variant: 'destructive'
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const response = await settingsAPI.uploadLogo(file);
+      setSettings({ ...settings, logo: response.data.logoUrl });
+      toast({
+        title: 'Başarılı',
+        description: 'Logo yüklendi'
+      });
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Logo yüklenemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleSaveCompany = async () => {
+    if (!editingCompany) return;
+
+    try {
+      if (editingCompany._id && editingCompany._id !== 'new') {
+        await shippingAPI.update(editingCompany._id, editingCompany);
+      } else {
+        await shippingAPI.create(editingCompany);
+      }
+      toast({
+        title: 'Başarılı',
+        description: 'Kargo firması kaydedildi'
+      });
+      setEditingCompany(null);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Kargo firması kaydedilemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleDeleteCompany = async (id) => {
+    if (!window.confirm('Kargo firmasını silmek istediğinize emin misiniz?')) return;
+
+    try {
+      await shippingAPI.delete(id);
+      toast({
+        title: 'Başarılı',
+        description: 'Kargo firması silindi'
+      });
+      fetchData();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Kargo firması silinemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!settings) return null;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/admin')}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div className="flex items-center space-x-2">
+                <Settings className="w-8 h-8 text-pink-600" />
+                <span className="text-2xl font-bold text-gray-900">Site Ayarları</span>
+              </div>
+            </div>
+            <Button className="bg-pink-600 hover:bg-pink-700" onClick={handleSaveSettings} disabled={saving}>
+              <Save className="w-4 h-4 mr-2" />
+              {saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="general" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="general">Genel</TabsTrigger>
+            <TabsTrigger value="colors">Renkler</TabsTrigger>
+            <TabsTrigger value="content">İçerik</TabsTrigger>
+            <TabsTrigger value="shipping">Kargo Firmaları</TabsTrigger>
+          </TabsList>
+
+          {/* General Tab */}
+          <TabsContent value="general" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Genel Ayarlar</CardTitle>
+                <CardDescription>Site temel bilgileri</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Site Adı</Label>
+                  <Input
+                    value={settings.siteName}
+                    onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Logo</Label>
+                  <div className="flex items-center gap-4">
+                    {settings.logo && (
+                      <img src={settings.logo} alt="Logo" className="h-12 w-auto" />
+                    )}
+                    <label className="cursor-pointer">
+                      <Button variant="outline" asChild>
+                        <span>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Logo Yükle
+                        </span>
+                      </Button>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Slogan</Label>
+                  <Input
+                    value={settings.tagline}
+                    onChange={(e) => setSettings({ ...settings, tagline: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Açıklama</Label>
+                  <Textarea
+                    value={settings.description}
+                    onChange={(e) => setSettings({ ...settings, description: e.target.value })}
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>İletişim Bilgileri</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Telefon</Label>
+                    <Input
+                      value={settings.contact?.phone || ''}
+                      onChange={(e) => setSettings({
+                        ...settings,
+                        contact: { ...settings.contact, phone: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Email</Label>
+                    <Input
+                      value={settings.contact?.email || ''}
+                      onChange={(e) => setSettings({
+                        ...settings,
+                        contact: { ...settings.contact, email: e.target.value }
+                      })}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Colors Tab */}
+          <TabsContent value="colors" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Renk Şeması</CardTitle>
+                <CardDescription>Site renklerini özelleştirin</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Ana Renk (Primary)</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.colors?.primary || '#DB2777'}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          colors: { ...settings.colors, primary: e.target.value }
+                        })}
+                        className="w-20 h-10"
+                      />
+                      <Input
+                        value={settings.colors?.primary || '#DB2777'}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          colors: { ...settings.colors, primary: e.target.value }
+                        })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>İkincil Renk (Secondary)</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.colors?.secondary || '#10B981'}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          colors: { ...settings.colors, secondary: e.target.value }
+                        })}
+                        className="w-20 h-10"
+                      />
+                      <Input
+                        value={settings.colors?.secondary || '#10B981'}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          colors: { ...settings.colors, secondary: e.target.value }
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gray-100 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-2">Önizleme:</p>
+                  <div className="flex gap-2">
+                    <div
+                      className="w-20 h-20 rounded-lg"
+                      style={{ backgroundColor: settings.colors?.primary }}
+                    />
+                    <div
+                      className="w-20 h-20 rounded-lg"
+                      style={{ backgroundColor: settings.colors?.secondary }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Content Tab */}
+          <TabsContent value="content" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Ana Sayfa Başlık</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Başlık</Label>
+                  <Input
+                    value={settings.hero?.title || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      hero: { ...settings.hero, title: e.target.value }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Alt Başlık</Label>
+                  <Textarea
+                    value={settings.hero?.subtitle || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      hero: { ...settings.hero, subtitle: e.target.value }
+                    })}
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Shipping Companies Tab */}
+          <TabsContent value="shipping" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Kargo Firmaları</CardTitle>
+                    <CardDescription>Kargo firmalarını yönetin</CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => setEditingCompany({
+                      _id: 'new',
+                      name: '',
+                      logo: '',
+                      price: 0,
+                      deliveryTime: '',
+                      isActive: true
+                    })}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Yeni Firma Ekle
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {shippingCompanies.map((company) => (
+                    <div key={company._id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <span className="font-bold text-gray-600">{company.name.charAt(0)}</span>
+                        </div>
+                        <div>
+                          <p className="font-medium">{company.name}</p>
+                          <p className="text-sm text-gray-500">{company.price} TL - {company.deliveryTime}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setEditingCompany(company)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => handleDeleteCompany(company._id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Edit Company Modal */}
+            {editingCompany && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>{editingCompany._id === 'new' ? 'Yeni Firma Ekle' : 'Firma Düzenle'}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Firma Adı</Label>
+                    <Input
+                      value={editingCompany.name}
+                      onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Logo URL</Label>
+                    <Input
+                      value={editingCompany.logo}
+                      onChange={(e) => setEditingCompany({ ...editingCompany, logo: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Fiyat (TL)</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={editingCompany.price}
+                        onChange={(e) => setEditingCompany({ ...editingCompany, price: parseFloat(e.target.value) })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Teslimat Süresi</Label>
+                      <Input
+                        value={editingCompany.deliveryTime}
+                        onChange={(e) => setEditingCompany({ ...editingCompany, deliveryTime: e.target.value })}
+                        placeholder="örn: 1-2 gün"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSaveCompany}>
+                      <Save className="w-4 h-4 mr-2" />
+                      Kaydet
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingCompany(null)}>
+                      İptal
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default AdminSettingsPage;

@@ -62,7 +62,11 @@ export const usersAPI = {
 
 // Shipping Companies API
 export const shippingAPI = {
-  getAll: () => api.get('/shipping-companies')
+  getAll: (params) => api.get('/shipping-companies', { params }),
+  getById: (id) => api.get(`/shipping-companies/${id}`),
+  create: (data) => api.post('/shipping-companies', data),
+  update: (id, data) => api.put(`/shipping-companies/${id}`, data),
+  delete: (id) => api.delete(`/shipping-companies/${id}`)
 };
 
 // Notifications API
@@ -77,6 +81,21 @@ export const adminAPI = {
   getOrders: (params) => api.get('/admin/orders', { params }),
   getUsers: (params) => api.get('/admin/users', { params }),
   updateOrderStatus: (orderId, data) => api.put(`/admin/orders/${orderId}/status`, data)
+};
+
+// Settings API
+export const settingsAPI = {
+  get: () => api.get('/settings'),
+  update: (data) => api.put('/settings', data),
+  uploadLogo: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/settings/logo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
 };
 
 export default api;
