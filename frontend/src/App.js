@@ -43,9 +43,10 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <div className="App">
-          <Routes>
+      <SettingsProvider>
+        <BrowserRouter>
+          <div className="App">
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
