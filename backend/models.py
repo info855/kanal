@@ -236,6 +236,8 @@ class SiteSettings(BaseModel):
     features: List[Feature] = []
     howItWorks: List[HowItWorksStep] = []
     faqs: List[FAQItem] = []
+    footerSections: List[FooterSection] = []
+    aboutPage: str = ""
     updatedAt: datetime = Field(default_factory=datetime.utcnow)
 
 class SiteSettingsUpdate(BaseModel):
