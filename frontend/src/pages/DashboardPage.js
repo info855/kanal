@@ -101,7 +101,7 @@ const DashboardPage = () => {
                 <Clock className="w-4 h-4 text-gray-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockOrders.filter(o => o.status !== 'delivered').length}</div>
+                <div className="text-2xl font-bold">{orders.filter(o => o.status !== 'delivered').length}</div>
                 <p className="text-xs text-gray-500 mt-1">Yolda olan gönderiler</p>
               </CardContent>
             </Card>
