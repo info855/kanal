@@ -54,9 +54,11 @@ const AdminSettingsPage = () => {
     setSaving(true);
     try {
       await settingsAPI.update(settings);
+      // Refresh settings globally
+      await refreshSettings();
       toast({
         title: 'Başarılı',
-        description: 'Ayarlar kaydedildi'
+        description: 'Ayarlar kaydedildi ve yayınlandı'
       });
     } catch (error) {
       toast({
