@@ -102,6 +102,47 @@ async def seed_database():
     else:
         print("ℹ️  Admin user already exists")
     
+    # Create demo users
+    demo_users = [
+        {
+            "email": "ali@example.com",
+            "name": "Ali Veli",
+            "phone": "+90 532 111 22 33",
+            "company": "ABC E-Ticaret",
+            "taxId": "1234567890",
+            "password": "demo123"
+        },
+        {
+            "email": "zeynep@example.com",
+            "name": "Zeynep Şahin",
+            "phone": "+90 533 222 33 44",
+            "company": "XYZ Mağaza",
+            "taxId": "0987654321",
+            "password": "demo123"
+        }
+    ]
+    
+    for demo_user in demo_users:
+        existing = await db.users.find_one({"email": demo_user["email"]})
+        if not existing:
+            print(f"👤 Creating demo user: {demo_user['email']}...")
+            user_data = {
+                "name": demo_user["name"],
+                "email": demo_user["email"],
+                "password": get_password_hash(demo_user["password"]),
+                "phone": demo_user["phone"],
+                "company": demo_user["company"],
+                "taxId": demo_user["taxId"],
+                "role": "user",
+                "balance": 1500.0,
+                "totalShipments": 0,
+                "createdAt": datetime.utcnow()
+            }
+            await db.users.insert_one(user_data)
+            print(f"✅ Demo user created: {demo_user['email']} (password: demo123)")
+        else:
+            print(f"ℹ️  Demo user already exists: {demo_user['email']}")
+    
     # Create indexes
     print("📑 Creating indexes...")
     await db.users.create_index("email", unique=True)
