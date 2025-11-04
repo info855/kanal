@@ -119,7 +119,10 @@ export const SettingsProvider = ({ children }) => {
       title: 'Tüm Kargo Firmaları tek platformda',
       subtitle: 'Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? En Ucuza Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!',
       buttonText: 'Ücretsiz Kayıt Ol'
-    }
+    },
+    features: [],
+    howItWorks: [],
+    faqs: []
   });
 
   const refreshSettings = () => {
