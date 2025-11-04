@@ -505,6 +505,104 @@ const AdminSettingsPage = () => {
             </Card>
           </TabsContent>
 
+          {/* Footer Tab */}
+          <TabsContent value="footer" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Footer Menü Bölümleri</CardTitle>
+                <CardDescription>Footer'daki menü bölümlerini düzenleyin</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Şirket Bölümü */}
+                <div className="p-4 border rounded-lg space-y-3">
+                  <h4 className="font-medium">Şirket Bölümü</h4>
+                  {['Hakkımızda', 'İletişim', 'Kariyer'].map((item, idx) => (
+                    <div key={idx} className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Link Metni</Label>
+                        <Input
+                          value={settings.footerSections?.[0]?.links?.[idx]?.title || item}
+                          onChange={(e) => {
+                            const newSections = [...(settings.footerSections || [{ title: 'Şirket', links: [] }, { title: 'Destek', links: [] }])];
+                            if (!newSections[0]) newSections[0] = { title: 'Şirket', links: [] };
+                            if (!newSections[0].links) newSections[0].links = [];
+                            newSections[0].links[idx] = { ...newSections[0].links[idx], title: e.target.value };
+                            setSettings({ ...settings, footerSections: newSections });
+                          }}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>URL</Label>
+                        <Input
+                          value={settings.footerSections?.[0]?.links?.[idx]?.url || `/${item.toLowerCase()}`}
+                          onChange={(e) => {
+                            const newSections = [...(settings.footerSections || [{ title: 'Şirket', links: [] }, { title: 'Destek', links: [] }])];
+                            if (!newSections[0]) newSections[0] = { title: 'Şirket', links: [] };
+                            if (!newSections[0].links) newSections[0].links = [];
+                            newSections[0].links[idx] = { ...newSections[0].links[idx], url: e.target.value };
+                            setSettings({ ...settings, footerSections: newSections });
+                          }}
+                          placeholder="/hakkimizda"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Destek Bölümü */}
+                <div className="p-4 border rounded-lg space-y-3">
+                  <h4 className="font-medium">Destek Bölümü</h4>
+                  {['Yardım Merkezi', 'API Dokümantasyon', 'SSS'].map((item, idx) => (
+                    <div key={idx} className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Link Metni</Label>
+                        <Input
+                          value={settings.footerSections?.[1]?.links?.[idx]?.title || item}
+                          onChange={(e) => {
+                            const newSections = [...(settings.footerSections || [{ title: 'Şirket', links: [] }, { title: 'Destek', links: [] }])];
+                            if (!newSections[1]) newSections[1] = { title: 'Destek', links: [] };
+                            if (!newSections[1].links) newSections[1].links = [];
+                            newSections[1].links[idx] = { ...newSections[1].links[idx], title: e.target.value };
+                            setSettings({ ...settings, footerSections: newSections });
+                          }}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>URL</Label>
+                        <Input
+                          value={settings.footerSections?.[1]?.links?.[idx]?.url || `/${item.toLowerCase().replace(' ', '-')}`}
+                          onChange={(e) => {
+                            const newSections = [...(settings.footerSections || [{ title: 'Şirket', links: [] }, { title: 'Destek', links: [] }])];
+                            if (!newSections[1]) newSections[1] = { title: 'Destek', links: [] };
+                            if (!newSections[1].links) newSections[1].links = [];
+                            newSections[1].links[idx] = { ...newSections[1].links[idx], url: e.target.value };
+                            setSettings({ ...settings, footerSections: newSections });
+                          }}
+                          placeholder="/yardim"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Hakkımızda Sayfası</CardTitle>
+                <CardDescription>Hakkımızda sayfasının içeriğini yazın</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  value={settings.aboutPage || ''}
+                  onChange={(e) => setSettings({ ...settings, aboutPage: e.target.value })}
+                  rows={10}
+                  placeholder="Hakkımızda içeriği buraya yazın..."
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Shipping Companies Tab */}
           <TabsContent value="shipping" className="space-y-6">
             <Card>
