@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { mockUsers } from '../mock/mockData';
+import { authAPI } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -18,46 +18,104 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is logged in from localStorage
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
+      // Optionally verify token with backend
+      authAPI.getMe()
+        .then(response => {
+          if (response.data.user) {
+            const userData = {
+              ...response.data.user,
+              id: response.data.user._id
+            };
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+          }
+        })
+        .catch(() => {
+          // Token invalid, clear storage
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
-  const login = (email, password) => {
-    // Mock login - in real app, this would call API
-    const foundUser = mockUsers.find(u => u.email === email);
-    if (foundUser) {
-      setUser(foundUser);
-      localStorage.setItem('user', JSON.stringify(foundUser));
-      return { success: true, user: foundUser };
+  const login = async (email, password) => {
+    try {
+      const response = await authAPI.login({ email, password });
+      if (response.data.success) {
+        const userData = {
+          ...response.data.user,
+          id: response.data.user._id
+        };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', response.data.token);
+        return { success: true, user: userData };
+      }
+      return { success: false, error: 'Giriş başarısız' };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Giriş başarısız' 
+      };
     }
-    return { success: false, error: 'Geçersiz email veya şifre' };
   };
 
-  const register = (userData) => {
-    // Mock registration
-    const newUser = {
-      id: mockUsers.length + 1,
-      ...userData,
-      role: 'user',
-      balance: 0,
-      totalShipments: 0,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return { success: true, user: newUser };
+  const register = async (userData) => {
+    try {
+      const response = await authAPI.register(userData);
+      if (response.data.success) {
+        const user = {
+          ...response.data.user,
+          id: response.data.user._id
+        };
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', response.data.token);
+        return { success: true, user };
+      }
+      return { success: false, error: 'Kayıt başarısız' };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Kayıt başarısız' 
+      };
+    }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
-  const updateBalance = (amount) => {
+  const updateBalance = async (amount) => {
     if (user) {
-      const updatedUser = { ...user, balance: user.balance + amount };
+      try {
+        const response = await usersAPI.updateBalance(user.id, amount);
+        if (response.data.success) {
+          const updatedUser = { ...user, balance: response.data.balance };
+          setUser(updatedUser);
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+      } catch (error) {
+        console.error('Balance update failed:', error);
+      }
+    }
+  };
+
+  const updateUser = (updatedData) => {
+    if (user) {
+      const updatedUser = { ...user, ...updatedData };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
     }
@@ -69,6 +127,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateBalance,
+    updateUser,
     loading,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin'
