@@ -54,6 +54,11 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/hakkimizda" element={<AboutPage />} />
+            <Route path="/iletisim" element={<ContactPage />} />
+            <Route path="/kariyer" element={<SimplePage />} />
+            <Route path="/yardim" element={<SimplePage />} />
+            <Route path="/api-docs" element={<SimplePage />} />
 
             {/* Protected User Routes */}
             <Route
