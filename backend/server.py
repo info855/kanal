@@ -35,6 +35,7 @@ app.include_router(order_routes.router)
 app.include_router(admin_routes.router)
 app.include_router(user_routes.router)
 app.include_router(shipping_routes.router)
+app.include_router(notification_routes.router)
 
 # Include the main api router
 app.include_router(api_router)
