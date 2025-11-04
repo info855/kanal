@@ -15,6 +15,7 @@ import { toast } from '../hooks/use-toast';
 const AdminSettingsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { refreshSettings } = useSettings();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState(null);
