@@ -94,7 +94,7 @@ const LandingPage = () => {
               </p>
               <div className="flex gap-4">
                 <Button size="lg" className="bg-pink-600 hover:bg-pink-700" onClick={() => navigate('/register')}>
-                  Ücretsiz Kayıt Ol
+                  {settings?.hero?.buttonText || 'Ücretsiz Kayıt Ol'}
                 </Button>
                 <Button size="lg" variant="outline" onClick={() => navigate('/login')}>
                   Giriş Yap
