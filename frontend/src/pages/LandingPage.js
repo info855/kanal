@@ -61,7 +61,7 @@ const LandingPage = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Package className="w-8 h-8 text-pink-600" />
-              <span className="text-2xl font-bold text-gray-900">Basit Kargo</span>
+              <span className="text-2xl font-bold text-gray-900">En Ucuza Kargo</span>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors">Hakkımızda</a>
@@ -86,7 +86,7 @@ const LandingPage = () => {
                 <span className="text-pink-600">tek platformda</span>
               </h1>
               <p className="text-xl text-gray-600">
-                Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? Basit Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!
+                Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? En Ucuza Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!
               </p>
               <div className="flex gap-4">
                 <Button size="lg" className="bg-pink-600 hover:bg-pink-700" onClick={() => navigate('/register')}>
@@ -119,7 +119,7 @@ const LandingPage = () => {
       <section className="py-20 bg-gray-50" id="about">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Neden Basit Kargo?</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Neden En Ucuza Kargo?</h2>
             <p className="text-xl text-gray-600">İşinizi kolaylaştıran özellikler</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -282,7 +282,7 @@ const LandingPage = () => {
               },
               {
                 q: 'Herhangi bir komisyon veya ücret ödeyecek miyim?',
-                a: 'Hayır, Basit Kargo\'yu ücretsiz kullanabilirsiniz ve kargo ücretleri üzerinde ekstra komisyon alınmaz.'
+                a: 'Hayır, En Ucuza Kargo\'yu ücretsiz kullanabilirsiniz ve kargo ücretleri üzerinde ekstra komisyon alınmaz.'
               },
               {
                 q: 'Kapıda ödeme gönderisi yapabilir miyim?',
@@ -313,7 +313,7 @@ const LandingPage = () => {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Package className="w-6 h-6 text-pink-500" />
-                <span className="text-xl font-bold">Basit Kargo</span>
+                <span className="text-xl font-bold">En Ucuza Kargo</span>
               </div>
               <p className="text-gray-400">Kargo yönetiminde yeni nesil çözümler.</p>
             </div>
@@ -340,7 +340,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Basit Kargo. Tüm hakları saklıdır.</p>
+            <p>&copy; 2024 En Ucuza Kargo. Tüm hakları saklıdır.</p>
           </div>
         </div>
       </footer>

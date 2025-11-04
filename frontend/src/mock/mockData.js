@@ -1,4 +1,4 @@
-// Mock Data for Basit Kargo Advanced
+// Mock Data for En Ucuza Kargo Advanced
 
 export const mockShippingCompanies = [
   { id: 1, name: 'PTT Kargo', logo: 'https://cdn.basitkargo.com/kargo-firmalari/ptt-kargo.png', price: 79.96, deliveryTime: '2-3 gün' },
@@ -111,7 +111,7 @@ export const mockUsers = [
     email: 'admin@basitkargo.com',
     phone: '+90 534 333 44 55',
     role: 'admin',
-    company: 'Basit Kargo',
+    company: 'En Ucuza Kargo',
     createdAt: '2023-01-01'
   }
 ];
