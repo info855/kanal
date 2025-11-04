@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Package, TrendingUp, DollarSign, Clock, Bell, Plus, LogOut, Settings, User, MapPin } from 'lucide-react';
-import { mockOrders, mockStats, mockChartData, mockNotifications } from '../mock/mockData';
+import { ordersAPI, notificationsAPI } from '../services/api';
+import { mockChartData } from '../mock/mockData';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [notifications] = useState(mockNotifications);
+  const [orders, setOrders] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [ordersRes, notifRes] = await Promise.all([
+        ordersAPI.getAll({ limit: 5 }),
+        notificationsAPI.getAll()
+      ]);
+      setOrders(ordersRes.data.orders || []);
+      setNotifications(notifRes.data.notifications || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
