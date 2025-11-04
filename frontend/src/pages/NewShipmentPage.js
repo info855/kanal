@@ -54,17 +54,30 @@ const NewShipmentPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission
-    const trackingCode = 'TRK' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    toast({
-      title: 'Gönderi Oluşturuldu!',
-      description: `Takip Kodu: ${trackingCode}`,
-    });
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 1500);
+    setLoading(true);
+    
+    try {
+      const response = await ordersAPI.create(formData);
+      if (response.data.success) {
+        toast({
+          title: 'Gönderi Oluşturuldu!',
+          description: `Takip Kodu: ${response.data.order.trackingCode}`,
+        });
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1500);
+      }
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Gönderi oluşturulamadı',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
