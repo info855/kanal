@@ -24,14 +24,18 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert('Şifreler eşleşmiyor!');
       return;
     }
-    register(formData);
-    navigate('/dashboard');
+    const result = await register(formData);
+    if (result.success) {
+      navigate('/dashboard');
+    } else {
+      alert(result.error || 'Kayıt başarısız');
+    }
   };
 
   return (
