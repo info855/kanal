@@ -343,8 +343,8 @@ const LandingPage = () => {
             </div>
             <div>
               <h3 className="font-semibold mb-4">İletişim</h3>
-              <p className="text-gray-400">Telefon: 0850 308 52 94</p>
-              <p className="text-gray-400">Email: info@basitkargo.com</p>
+              <p className="text-gray-400">Telefon: {settings?.contact?.phone || '0850 308 52 94'}</p>
+              <p className="text-gray-400">Email: {settings?.contact?.email || 'info@basitkargo.com'}</p>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
