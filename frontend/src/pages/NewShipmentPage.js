@@ -232,25 +232,29 @@ const NewShipmentPage = () => {
                   <CardDescription>Kargo firmanızı seçin</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    {mockShippingCompanies.map((company) => (
-                      <div
-                        key={company.id}
-                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.shippingCompanyId === company.id.toString()
-                            ? 'border-pink-600 bg-pink-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                        onClick={() => handleSelectChange('shippingCompanyId', company.id.toString())}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-medium">{company.name}</p>
-                          <p className="text-lg font-bold text-pink-600">{company.price} TL</p>
+                  {shippingCompanies.length === 0 ? (
+                    <div className="text-center py-4 text-gray-500">Yükleniyor...</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {shippingCompanies.map((company) => (
+                        <div
+                          key={company._id}
+                          className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                            formData.shippingCompanyId === company._id
+                              ? 'border-pink-600 bg-pink-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                          onClick={() => handleSelectChange('shippingCompanyId', company._id)}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="font-medium">{company.name}</p>
+                            <p className="text-lg font-bold text-pink-600">{company.price} TL</p>
+                          </div>
+                          <p className="text-sm text-gray-500">Teslimat: {company.deliveryTime}</p>
                         </div>
-                        <p className="text-sm text-gray-500">Teslimat: {company.deliveryTime}</p>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
