@@ -82,6 +82,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard/orders"
+              element={
+                <ProtectedRoute>
+                  <OrdersListPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected Admin Routes */}
             <Route
