@@ -126,6 +126,7 @@ function App() {
           <Toaster />
         </div>
       </BrowserRouter>
+      </SettingsProvider>
     </AuthProvider>
   );
 }
