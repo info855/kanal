@@ -28,19 +28,23 @@ const LoginPage = () => {
     setLoading(true);
     setError('');
 
-    // Mock login - accepts any email from mockUsers
-    const result = login(formData.email, formData.password);
-    
-    if (result.success) {
-      setTimeout(() => {
-        if (result.user.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/dashboard');
-        }
-      }, 500);
-    } else {
-      setError(result.error);
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        setTimeout(() => {
+          if (result.user.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/dashboard');
+          }
+        }, 500);
+      } else {
+        setError(result.error);
+        setLoading(false);
+      }
+    } catch (error) {
+      setError('Giriş yapılırken bir hata oluştu');
       setLoading(false);
     }
   };
