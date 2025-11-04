@@ -28,6 +28,24 @@ const NewShipmentPage = () => {
     description: ''
   });
 
+  useEffect(() => {
+    fetchShippingCompanies();
+  }, []);
+
+  const fetchShippingCompanies = async () => {
+    try {
+      const response = await shippingAPI.getAll();
+      setShippingCompanies(response.data.companies || []);
+    } catch (error) {
+      console.error('Error fetching shipping companies:', error);
+      toast({
+        title: 'Hata',
+        description: 'Kargo firmaları yüklenemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
