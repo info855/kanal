@@ -14,6 +14,7 @@ import NewShipmentPage from './pages/NewShipmentPage';
 import OrdersListPage from './pages/OrdersListPage';
 import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
+import AdminSettingsPage from './pages/AdminSettingsPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, adminOnly = false }) => {
