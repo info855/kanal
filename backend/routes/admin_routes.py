@@ -8,7 +8,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
-from server import db
+from database import db
 
 @router.get("/stats", response_model=dict)
 async def get_stats(current_user: dict = Depends(get_current_admin)):

@@ -5,7 +5,7 @@ from auth import get_current_user
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
-from server import db
+from database import db
 
 @router.get("/{user_id}", response_model=dict)
 async def get_user(user_id: str, current_user: dict = Depends(get_current_user)):

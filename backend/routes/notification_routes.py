@@ -4,7 +4,7 @@ from auth import get_current_user
 
 router = APIRouter(prefix="/api/notifications", tags=["notifications"])
 
-from server import db
+from database import db
 
 @router.get("", response_model=dict)
 async def get_notifications(current_user: dict = Depends(get_current_user)):

@@ -8,7 +8,7 @@ import os
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 # Database dependency
-from server import db
+from database import db
 
 @router.post("/register", response_model=dict)
 async def register(user_data: UserCreate):

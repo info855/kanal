@@ -6,7 +6,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/api/shipping-companies", tags=["shipping-companies"])
 
-from server import db
+from database import db
 
 @router.get("", response_model=dict)
 async def get_shipping_companies():
