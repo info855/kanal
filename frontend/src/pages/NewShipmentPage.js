@@ -293,8 +293,8 @@ const NewShipmentPage = () => {
                 </CardContent>
               </Card>
 
-              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" size="lg">
-                Gönderiyi Oluştur
+              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" size="lg" disabled={loading}>
+                {loading ? 'Oluşturuluyor...' : 'Gönderiyi Oluştur'}
               </Button>
             </div>
           </div>
