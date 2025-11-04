@@ -111,7 +111,7 @@ const LoginPage = () => {
 
             <div className="pt-4 border-t">
               <p className="text-xs text-gray-500 text-center">
-                Demo hesaplar: ali@example.com, zeynep@example.com, admin@basitkargo.com (şifre herhangi bir şey)
+                Demo hesaplar: ali@example.com, zeynep@example.com, admin@enucuzakargo.com (şifre herhangi bir şey)
               </p>
             </div>
           </form>
