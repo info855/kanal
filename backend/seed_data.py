@@ -88,7 +88,7 @@ async def seed_database():
             "email": "admin@basitkargo.com",
             "password": get_password_hash("admin123"),
             "phone": "+90 534 333 44 55",
-            "company": "Basit Kargo",
+            "company": "En Ucuza Kargo",
             "taxId": "0000000000",
             "role": "admin",
             "balance": 0.0,
