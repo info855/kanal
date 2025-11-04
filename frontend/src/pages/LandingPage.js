@@ -11,28 +11,45 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
 
-  const features = [
+  // Icon mapping
+  const iconMap = {
+    Package: <Package className="w-12 h-12 text-pink-600" />,
+    Clock: <Clock className="w-12 h-12 text-pink-600" />,
+    Shield: <Shield className="w-12 h-12 text-pink-600" />,
+    BarChart3: <BarChart3 className="w-12 h-12 text-pink-600" />,
+    TrendingUp: <TrendingUp className="w-12 h-12 text-pink-600" />,
+    Zap: <Zap className="w-12 h-12 text-pink-600" />,
+    CheckCircle2: <CheckCircle2 className="w-12 h-12 text-pink-600" />,
+    Users: <Users className="w-12 h-12 text-pink-600" />
+  };
+
+  const defaultFeatures = [
     {
-      icon: <Package className="w-12 h-12 text-pink-600" />,
+      icon: 'Package',
       title: 'Kargo Anlaşması',
       description: 'Tek üyelikle favori kargo firmalarınızla anlaşma yapın ve en uygun fiyatlarla gönderinizi gerçekleştirin.'
     },
     {
-      icon: <Clock className="w-12 h-12 text-pink-600" />,
+      icon: 'Clock',
       title: 'Kuyrukta Bekleme Yok',
       description: 'Gönderinizi teslim ederken alıcı bilgilerini doldurmak veya ödeme yapmak için kuyrukta beklemeden zamandan tasarruf edin.'
     },
     {
-      icon: <Shield className="w-12 h-12 text-pink-600" />,
+      icon: 'Shield',
       title: 'Doğru Adres',
       description: 'Alıcı adres detaylarını kendiniz belirterek olası karışıklıkları önleyin ve sorunsuz teslimat süreci sağlayın.'
     },
     {
-      icon: <BarChart3 className="w-12 h-12 text-pink-600" />,
+      icon: 'BarChart3',
       title: 'Kargo Takip Sayfası',
       description: 'Markanıza özel kişiselleştirilmiş takip sayfası ile müşterilerinizin gözünde güven ve prestij kazanın.'
     }
   ];
+
+  const features = (settings?.features?.length > 0 ? settings.features : defaultFeatures).map(f => ({
+    ...f,
+    icon: iconMap[f.icon] || iconMap.Package
+  }));
 
   const steps = [
     {
