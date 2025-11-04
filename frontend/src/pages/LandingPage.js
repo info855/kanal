@@ -309,30 +309,30 @@ const LandingPage = () => {
             <p className="text-xl text-gray-600">Merak ettikleriniz</p>
           </div>
           <div className="max-w-3xl mx-auto space-y-4">
-            {[
+            {(settings?.faqs?.length > 0 ? settings.faqs : [
               {
-                q: 'Üyelik için neler gerekli?',
-                a: 'Üyelik için Vergi Levhası veya Esnaf Muafiyeti Belgesi gerekmektedir.'
+                question: 'Üyelik için neler gerekli?',
+                answer: 'Üyelik için Vergi Levhası veya Esnaf Muafiyeti Belgesi gerekmektedir.'
               },
               {
-                q: 'Herhangi bir komisyon veya ücret ödeyecek miyim?',
-                a: 'Hayır, En Ucuza Kargo\'yu ücretsiz kullanabilirsiniz ve kargo ücretleri üzerinde ekstra komisyon alınmaz.'
+                question: 'Herhangi bir komisyon veya ücret ödeyecek miyim?',
+                answer: 'Hayır, En Ucuza Kargo\'yu ücretsiz kullanabilirsiniz ve kargo ücretleri üzerinde ekstra komisyon alınmaz.'
               },
               {
-                q: 'Kapıda ödeme gönderisi yapabilir miyim?',
-                a: 'Evet, kapıda ödeme gönderi yapabilirsiniz.'
+                question: 'Kapıda ödeme gönderisi yapabilir miyim?',
+                answer: 'Evet, kapıda ödeme gönderi yapabilirsiniz.'
               },
               {
-                q: 'API mevcut mu?',
-                a: 'Evet, REST standartlarına uygun API dokümantasyonumuza erişebilirsiniz.'
+                question: 'API mevcut mu?',
+                answer: 'Evet, REST standartlarına uygun API dokümantasyonumuza erişebilirsiniz.'
               }
-            ].map((faq, idx) => (
+            ]).filter(faq => faq.question && faq.answer).map((faq, idx) => (
               <Card key={idx}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{faq.q}</CardTitle>
+                  <CardTitle className="text-lg">{faq.question}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{faq.a}</p>
+                  <p className="text-gray-600">{faq.answer}</p>
                 </CardContent>
               </Card>
             ))}
