@@ -87,12 +87,10 @@ const LandingPage = () => {
             <div className="space-y-6">
               <Badge className="bg-pink-100 text-pink-700 hover:bg-pink-100">Tüm Kargo Firmaları</Badge>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
-                Tüm Kargo Firmaları
-                <br />
-                <span className="text-pink-600">tek platformda</span>
+                {settings?.hero?.title || 'Tüm Kargo Firmaları tek platformda'}
               </h1>
               <p className="text-xl text-gray-600">
-                Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? En Ucuza Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!
+                {settings?.hero?.subtitle || 'Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? En Ucuza Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!'}
               </p>
               <div className="flex gap-4">
                 <Button size="lg" className="bg-pink-600 hover:bg-pink-700" onClick={() => navigate('/register')}>
