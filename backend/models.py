@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Optional, List
+from typing import Optional, List, Dict
 from datetime import datetime
 from bson import ObjectId
 
@@ -115,6 +115,13 @@ class ShippingCompanyCreate(BaseModel):
     price: float
     deliveryTime: str
 
+class ShippingCompanyUpdate(BaseModel):
+    name: Optional[str] = None
+    logo: Optional[str] = None
+    price: Optional[float] = None
+    deliveryTime: Optional[str] = None
+    isActive: Optional[bool] = None
+
 class ShippingCompany(BaseModel):
     id: str = Field(alias="_id")
     name: str
@@ -174,3 +181,80 @@ class BalanceUpdate(BaseModel):
 class StatusUpdate(BaseModel):
     status: str
     location: Optional[Location] = None
+
+# Site Settings Models
+class ColorScheme(BaseModel):
+    primary: str = "#DB2777"  # Pink
+    secondary: str = "#10B981"  # Green
+    accent: str = "#3B82F6"  # Blue
+    background: str = "#FFFFFF"  # White
+    text: str = "#1F2937"  # Gray
+
+class ContactInfo(BaseModel):
+    phone: str = "0850 308 52 94"
+    email: str = "info@enucuzakargo.com"
+    address: str = ""
+    facebook: str = ""
+    twitter: str = ""
+    instagram: str = ""
+    linkedin: str = ""
+
+class HeroContent(BaseModel):
+    title: str = "Tüm Kargo Firmaları tek platformda"
+    subtitle: str = "Hala kargo firmaları ile tek tek anlaşma mı yapıyorsunuz? En Ucuza Kargo tüm kargo hizmetlerini tek platformda toplayarak en iyi fiyatları sunuyor!"
+    buttonText: str = "Ücretsiz Kayıt Ol"
+
+class Feature(BaseModel):
+    icon: str
+    title: str
+    description: str
+
+class HowItWorksStep(BaseModel):
+    title: str
+    description: str
+
+class FAQItem(BaseModel):
+    question: str
+    answer: str
+
+class SiteSettings(BaseModel):
+    siteName: str = "En Ucuza Kargo"
+    logo: str = ""
+    tagline: str = "Kargo yönetiminde yeni nesil çözümler"
+    description: str = "Tek üyelikle tüm kargo firmalarıyla çalışın, uygun fiyatlarla kargo gönderin"
+    colors: ColorScheme = ColorScheme()
+    contact: ContactInfo = ContactInfo()
+    hero: HeroContent = HeroContent()
+    features: List[Feature] = []
+    howItWorks: List[HowItWorksStep] = []
+    faqs: List[FAQItem] = []
+    updatedAt: datetime = Field(default_factory=datetime.utcnow)
+
+class SiteSettingsUpdate(BaseModel):
+    siteName: Optional[str] = None
+    logo: Optional[str] = None
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    colors: Optional[ColorScheme] = None
+    contact: Optional[ContactInfo] = None
+    hero: Optional[HeroContent] = None
+    features: Optional[List[Feature]] = None
+    howItWorks: Optional[List[HowItWorksStep]] = None
+    faqs: Optional[List[FAQItem]] = None
+
+# Pricing Models
+class PricingRow(BaseModel):
+    desi: str
+    prices: Dict[str, float]  # {"companyId": price}
+
+class PricingTable(BaseModel):
+    id: str = Field(alias="_id")
+    rows: List[PricingRow]
+    updatedAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class PricingTableUpdate(BaseModel):
+    rows: List[PricingRow]
