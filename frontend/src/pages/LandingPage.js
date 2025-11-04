@@ -51,26 +51,39 @@ const LandingPage = () => {
     icon: iconMap[f.icon] || iconMap.Package
   }));
 
-  const steps = [
+  const defaultSteps = [
     {
       number: '1',
-      icon: <CheckCircle2 className="w-10 h-10 text-white" />,
+      icon: 'CheckCircle2',
       title: 'Kayıt Ol',
       description: 'Kayıt Ol butonuna tıklayın ve ad, soyad, telefon, email gibi bilgilerinizi girerek üyeliğinizi başlatın.'
     },
     {
       number: '2',
-      icon: <Package className="w-10 h-10 text-white" />,
+      icon: 'Package',
       title: 'Belge Yükle',
       description: 'Gerekli belgeleri hazırlayın ve "Belge Yükle" bölümüne yükleyin.'
     },
     {
       number: '3',
-      icon: <Zap className="w-10 h-10 text-white" />,
+      icon: 'Zap',
       title: 'Gönderim Başlat',
       description: 'Herşey hazır! "Yeni Gönderi" butonuna tıklayın ve ilk paketinizi yola çıkarın.'
     }
   ];
+
+  const stepIcons = {
+    CheckCircle2: <CheckCircle2 className="w-10 h-10 text-white" />,
+    Package: <Package className="w-10 h-10 text-white" />,
+    Zap: <Zap className="w-10 h-10 text-white" />
+  };
+
+  const steps = (settings?.howItWorks?.length > 0 ? settings.howItWorks : defaultSteps).map((step, idx) => ({
+    number: String(idx + 1),
+    icon: stepIcons[step.icon || defaultSteps[idx]?.icon] || stepIcons.Package,
+    title: step.title,
+    description: step.description
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
