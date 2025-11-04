@@ -1,7 +1,7 @@
-# Basit Kargo - API Contracts & Backend Implementation Plan
+# En Ucuza Kargo - API Contracts & Backend Implementation Plan
 
 ## Overview
-This document outlines the API contracts, database schema, and integration plan for the Basit Kargo platform.
+This document outlines the API contracts, database schema, and integration plan for the En Ucuza Kargo platform.
 
 ## Database Collections
 
