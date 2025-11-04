@@ -166,7 +166,7 @@ const DashboardPage = () => {
                   <CardTitle>Son Gönderiler</CardTitle>
                   <CardDescription>Son gönderilerinizin durumu</CardDescription>
                 </div>
-                <Button variant="outline" onClick={() => navigate('/dashboard/orders')}>
+                <Button variant="outline" onClick={() => navigate('/dashboard')}>
                   Tümünü Gör
                 </Button>
               </div>
