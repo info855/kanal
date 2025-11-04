@@ -362,6 +362,144 @@ const AdminSettingsPage = () => {
                     rows={3}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Buton Metni</Label>
+                  <Input
+                    value={settings.hero?.buttonText || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      hero: { ...settings.hero, buttonText: e.target.value }
+                    })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Özellikler (4 Adet)</CardTitle>
+                <CardDescription>Neden Biz bölümündeki özellikler</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {[0, 1, 2, 3].map((index) => (
+                  <div key={index} className="p-4 border rounded-lg space-y-3">
+                    <h4 className="font-medium">Özellik {index + 1}</h4>
+                    <div className="space-y-2">
+                      <Label>Başlık</Label>
+                      <Input
+                        value={settings.features?.[index]?.title || ''}
+                        onChange={(e) => {
+                          const newFeatures = [...(settings.features || [])];
+                          newFeatures[index] = { ...newFeatures[index], title: e.target.value };
+                          setSettings({ ...settings, features: newFeatures });
+                        }}
+                        placeholder="Örn: Kargo Anlaşması"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Açıklama</Label>
+                      <Textarea
+                        value={settings.features?.[index]?.description || ''}
+                        onChange={(e) => {
+                          const newFeatures = [...(settings.features || [])];
+                          newFeatures[index] = { ...newFeatures[index], description: e.target.value };
+                          setSettings({ ...settings, features: newFeatures });
+                        }}
+                        rows={2}
+                        placeholder="Özellik açıklaması"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>İkon (Lucide React ismi)</Label>
+                      <Input
+                        value={settings.features?.[index]?.icon || ''}
+                        onChange={(e) => {
+                          const newFeatures = [...(settings.features || [])];
+                          newFeatures[index] = { ...newFeatures[index], icon: e.target.value };
+                          setSettings({ ...settings, features: newFeatures });
+                        }}
+                        placeholder="Örn: Package, Clock, Shield"
+                      />
+                      <p className="text-xs text-gray-500">Kullanılabilir ikonlar: Package, TrendingUp, Shield, Zap, BarChart3, Clock, CheckCircle2, Users</p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Nasıl Çalışır (3 Adım)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {[0, 1, 2].map((index) => (
+                  <div key={index} className="p-4 border rounded-lg space-y-3">
+                    <h4 className="font-medium">Adım {index + 1}</h4>
+                    <div className="space-y-2">
+                      <Label>Başlık</Label>
+                      <Input
+                        value={settings.howItWorks?.[index]?.title || ''}
+                        onChange={(e) => {
+                          const newSteps = [...(settings.howItWorks || [])];
+                          newSteps[index] = { ...newSteps[index], title: e.target.value };
+                          setSettings({ ...settings, howItWorks: newSteps });
+                        }}
+                        placeholder="Örn: Kayıt Ol"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Açıklama</Label>
+                      <Textarea
+                        value={settings.howItWorks?.[index]?.description || ''}
+                        onChange={(e) => {
+                          const newSteps = [...(settings.howItWorks || [])];
+                          newSteps[index] = { ...newSteps[index], description: e.target.value };
+                          setSettings({ ...settings, howItWorks: newSteps });
+                        }}
+                        rows={2}
+                        placeholder="Adım açıklaması"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>SSS (Sık Sorulan Sorular)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {[0, 1, 2, 3].map((index) => (
+                  <div key={index} className="p-4 border rounded-lg space-y-3">
+                    <h4 className="font-medium">Soru {index + 1}</h4>
+                    <div className="space-y-2">
+                      <Label>Soru</Label>
+                      <Input
+                        value={settings.faqs?.[index]?.question || ''}
+                        onChange={(e) => {
+                          const newFaqs = [...(settings.faqs || [])];
+                          newFaqs[index] = { ...newFaqs[index], question: e.target.value };
+                          setSettings({ ...settings, faqs: newFaqs });
+                        }}
+                        placeholder="Soru giriniz"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Cevap</Label>
+                      <Textarea
+                        value={settings.faqs?.[index]?.answer || ''}
+                        onChange={(e) => {
+                          const newFaqs = [...(settings.faqs || [])];
+                          newFaqs[index] = { ...newFaqs[index], answer: e.target.value };
+                          setSettings({ ...settings, faqs: newFaqs });
+                        }}
+                        rows={2}
+                        placeholder="Cevap giriniz"
+                      />
+                    </div>
+                  </div>
+                ))}
               </CardContent>
             </Card>
           </TabsContent>
