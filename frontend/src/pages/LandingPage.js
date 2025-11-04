@@ -316,10 +316,14 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <Package className="w-6 h-6 text-pink-500" />
-                <span className="text-xl font-bold">En Ucuza Kargo</span>
+                {settings?.logo ? (
+                  <img src={settings.logo} alt={settings.siteName} className="h-6 w-auto" />
+                ) : (
+                  <Package className="w-6 h-6 text-pink-500" />
+                )}
+                <span className="text-xl font-bold">{settings?.siteName || 'En Ucuza Kargo'}</span>
               </div>
-              <p className="text-gray-400">Kargo yönetiminde yeni nesil çözümler.</p>
+              <p className="text-gray-400">{settings?.tagline || 'Kargo yönetiminde yeni nesil çözümler.'}</p>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Şirket</h3>
