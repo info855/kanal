@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dynamic color overrides */
+.bg-pink-600 {
+  background-color: var(--color-pink-600, #DB2777) !important;
+}
+
+.hover\:bg-pink-700:hover {
+  background-color: var(--color-pink-700, #BE185D) !important;
+}
+
+.text-pink-600 {
+  color: var(--color-pink-600, #DB2777) !important;
+}
+
+.text-pink-700 {
+  color: var(--color-pink-700, #BE185D) !important;
+}
+
+.border-pink-600 {
+  border-color: var(--color-pink-600, #DB2777) !important;
+}
+
 body {
     margin: 0;
     font-family:
