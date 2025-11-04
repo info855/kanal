@@ -176,6 +176,7 @@ const AdminSettingsPage = () => {
             <TabsTrigger value="general">Genel</TabsTrigger>
             <TabsTrigger value="colors">Renkler</TabsTrigger>
             <TabsTrigger value="content">İçerik</TabsTrigger>
+            <TabsTrigger value="footer">Footer & Sayfalar</TabsTrigger>
             <TabsTrigger value="shipping">Kargo Firmaları</TabsTrigger>
           </TabsList>
 
