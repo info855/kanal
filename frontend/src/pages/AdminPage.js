@@ -55,6 +55,10 @@ const AdminPage = () => {
               <span className="text-2xl font-bold text-gray-900">Admin Panel</span>
             </div>
             <div className="flex items-center space-x-4">
+              <Button variant="outline" onClick={() => navigate('/admin/settings')}>
+                <Settings className="w-4 h-4 mr-2" />
+                Site Ayarları
+              </Button>
               <Badge className="bg-purple-100 text-purple-700">Administrator</Badge>
               <Button variant="ghost" size="icon" onClick={handleLogout}>
                 <LogOut className="w-5 h-5" />
