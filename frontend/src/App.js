@@ -109,6 +109,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminSettingsPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" />} />
