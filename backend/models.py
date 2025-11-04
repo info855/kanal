@@ -217,6 +217,14 @@ class FAQItem(BaseModel):
     question: str
     answer: str
 
+class FooterLink(BaseModel):
+    title: str
+    url: str
+
+class FooterSection(BaseModel):
+    title: str
+    links: List[FooterLink]
+
 class SiteSettings(BaseModel):
     siteName: str = "En Ucuza Kargo"
     logo: str = ""
