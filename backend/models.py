@@ -251,6 +251,8 @@ class SiteSettingsUpdate(BaseModel):
     features: Optional[List[Feature]] = None
     howItWorks: Optional[List[HowItWorksStep]] = None
     faqs: Optional[List[FAQItem]] = None
+    footerSections: Optional[List[FooterSection]] = None
+    aboutPage: Optional[str] = None
 
 # Pricing Models
 class PricingRow(BaseModel):
