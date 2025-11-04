@@ -62,8 +62,12 @@ const LandingPage = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Package className="w-8 h-8 text-pink-600" />
-              <span className="text-2xl font-bold text-gray-900">En Ucuza Kargo</span>
+              {settings?.logo ? (
+                <img src={settings.logo} alt={settings.siteName} className="h-8 w-auto" />
+              ) : (
+                <Package className="w-8 h-8 text-pink-600" />
+              )}
+              <span className="text-2xl font-bold text-gray-900">{settings?.siteName || 'En Ucuza Kargo'}</span>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors">Hakkımızda</a>
