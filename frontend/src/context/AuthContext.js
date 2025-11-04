@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }) => {
   const updateBalance = async (amount) => {
     if (user) {
       try {
+        const { usersAPI } = await import('../services/api');
         const response = await usersAPI.updateBalance(user.id, amount);
         if (response.data.success) {
           const updatedUser = { ...user, balance: response.data.balance };
