@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import socketio
@@ -12,31 +12,13 @@ from pathlib import Path
 from database import db, client
 
 # Import routes
-from routes import (
-    auth_routes, 
-    order_routes, 
-    admin_routes, 
-    user_routes, 
-    shipping_routes, 
-    notification_routes, 
-    settings_routes, 
-    media_routes, 
-    wallet_routes, 
-    admin_wallet_routes
-)
+from routes import auth_routes, order_routes, admin_routes, user_routes, shipping_routes, notification_routes, settings_routes, media_routes, wallet_routes, admin_wallet_routes
 
 # Import socket manager
 from socket_manager import sio
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 # Create the main app
 app = FastAPI(title="En Ucuza Kargo API", version="1.0.0")
@@ -53,20 +35,16 @@ async def api_root():
 # Mount Socket.IO
 socket_app = socketio.ASGIApp(sio, app)
 
-# CORS Middleware
-cors_origins = os.getenv('CORS_ORIGINS', '*')
-if cors_origins != '*':
-    cors_origins = cors_origins.split(',')
+# Create a router with the /api prefix
+api_router = APIRouter(prefix="/api")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins if isinstance(cors_origins, list) else [cors_origins],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-# Include all routers with /api prefix
+# Health check endpoint
+@api_router.get("/")
+async def root():
+    return {"message": "En Ucuza Kargo API is running", "version": "1.0.0"}
+
+# Include all routers
 app.include_router(auth_routes.router)
 app.include_router(order_routes.router)
 app.include_router(admin_routes.router)
@@ -78,20 +56,44 @@ app.include_router(media_routes.router)
 app.include_router(wallet_routes.router)
 app.include_router(admin_wallet_routes.router)
 
+# Include the main api router
+app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Serve React frontend build files
+# In Render, the structure is: /opt/render/project/src/
 frontend_build_dir = Path(__file__).parent.parent / "frontend" / "build"
 
 logger.info(f"Looking for frontend build at: {frontend_build_dir}")
 logger.info(f"Frontend build exists: {frontend_build_dir.exists()}")
 
 if frontend_build_dir.exists():
-    logger.info("✅ Frontend build found! Serving static files...")
+    logger.info("Frontend build found! Serving static files...")
     
     # Mount static files (CSS, JS, images)
     static_dir = frontend_build_dir / "static"
     if static_dir.exists():
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
-        logger.info("✅ Mounted /static directory")
+    
+    # Serve other assets
+    for asset_dir in ["images", "fonts", "media"]:
+        asset_path = frontend_build_dir / asset_dir
+        if asset_path.exists():
+            app.mount(f"/{asset_dir}", StaticFiles(directory=str(asset_path)), name=asset_dir)
     
     # Serve index.html for all non-API routes (must be last)
     @app.get("/{full_path:path}")
@@ -110,13 +112,13 @@ if frontend_build_dir.exists():
         if index_path.exists():
             return FileResponse(index_path)
         else:
-            logger.error(f"❌ index.html not found at {index_path}")
-            return {"error": "Frontend build incomplete"}
+            logger.error(f"index.html not found at {index_path}")
+            return {"error": "Frontend not built"}
 else:
-    logger.warning(f"⚠️ Frontend build directory not found at {frontend_build_dir}")
+    logger.warning(f"Frontend build directory not found at {frontend_build_dir}")
     logger.warning("Frontend will not be served. Only API endpoints available.")
     
-    # Fallback: Serve a simple HTML page
+    # Fallback: Serve a simple HTML page when frontend is not available
     @app.get("/", response_class=HTMLResponse)
     async def root_fallback():
         return """
@@ -146,7 +148,6 @@ else:
                 p { font-size: 1.2em; margin: 10px 0; }
                 .status { color: #4ade80; }
                 .error { color: #fbbf24; }
-                a { color: white; text-decoration: underline; }
             </style>
         </head>
         <body>
@@ -154,7 +155,7 @@ else:
                 <h1>🚀 En Ucuza Kargo</h1>
                 <p class="status">✅ Backend API Çalışıyor</p>
                 <p class="error">⚠️ Frontend build bulunamadı</p>
-                <p>API Endpoint: <a href="/api/">/api/</a></p>
+                <p>API Endpoint: <a href="/api/" style="color: white;">/api/</a></p>
                 <hr style="margin: 30px 0; opacity: 0.3;">
                 <p style="font-size: 0.9em; opacity: 0.8;">
                     Frontend build edilmedi veya yanlış konumda.<br>
