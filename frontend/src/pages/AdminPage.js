@@ -194,6 +194,7 @@ const AdminPage = () => {
             <TabsTrigger value="overview">Genel Bakış</TabsTrigger>
             <TabsTrigger value="orders">Tüm Siparishler</TabsTrigger>
             <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
+            <TabsTrigger value="chat">Canlı Destek</TabsTrigger>
             <TabsTrigger value="wallet">Cüzdan Yönetimi</TabsTrigger>
             <TabsTrigger value="analytics">Analizler</TabsTrigger>
           </TabsList>
