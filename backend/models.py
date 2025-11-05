@@ -284,16 +284,7 @@ class PricingTable(BaseModel):
 class PricingTableUpdate(BaseModel):
     rows: List[PricingRow]
 
-
 # Wallet Models
-class BankInfo(BaseModel):
-    bankName: str = ""
-    accountHolder: str = ""
-    iban: str = ""
-    accountNumber: str = ""
-    branchCode: str = ""
-    description: str = ""
-
 class Transaction(BaseModel):
     id: str = Field(alias="_id")
     userId: str
