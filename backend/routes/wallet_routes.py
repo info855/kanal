@@ -14,7 +14,7 @@ MINIMUM_BALANCE = 100.0  # Minimum balance requirement
 # Get user balance
 @router.get("/balance", response_model=dict)
 async def get_balance(current_user: dict = Depends(get_current_user)):
-    user = await db.users.find_one({"_id": current_user["userId"]})
+    user = await db.users.find_one({"_id": ObjectId(current_user["userId"])})
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
