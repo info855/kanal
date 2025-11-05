@@ -5,8 +5,16 @@ services:
     env: python
     region: frankfurt
     buildCommand: |
+      echo "==> Building Backend..."
       pip install -r backend/requirements.txt
-      cd frontend && yarn install && REACT_APP_BACKEND_URL= yarn build && cd ..
+      echo "==> Building Frontend..."
+      cd frontend
+      yarn install
+      REACT_APP_BACKEND_URL= yarn build
+      echo "==> Frontend build complete!"
+      ls -la build/
+      cd ..
+      echo "==> Build finished!"
     startCommand: cd backend && uvicorn server:socket_app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
