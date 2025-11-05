@@ -338,7 +338,7 @@ const AdminPage = () => {
                         <p className="text-sm text-gray-600">Geçen Ay</p>
                         <p className="text-2xl font-bold text-blue-600">108,920 TL</p>
                       </div>
-                      <DollarSign className="w-8 h-8 text-blue-600" />
+                      <span className="text-3xl font-bold text-blue-600">₺</span>
                     </div>
                     <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
                       <div>
