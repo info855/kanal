@@ -549,6 +549,89 @@ const AdminSettingsPage = () => {
             </Card>
           </TabsContent>
 
+          {/* Bank Info Tab */}
+          <TabsContent value="bank" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Banka Hesap Bilgileri</CardTitle>
+                <CardDescription>
+                  Kullanıcıların ödeme yapacağı banka hesabı bilgilerini girin
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Banka Adı</Label>
+                  <Input
+                    value={settings.bankInfo?.bankName || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      bankInfo: { ...settings.bankInfo, bankName: e.target.value }
+                    })}
+                    placeholder="Örn: Ziraat Bankası"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Hesap Sahibi</Label>
+                  <Input
+                    value={settings.bankInfo?.accountHolder || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      bankInfo: { ...settings.bankInfo, accountHolder: e.target.value }
+                    })}
+                    placeholder="Örn: En Ucuza Kargo Ltd. Şti."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>IBAN</Label>
+                  <Input
+                    value={settings.bankInfo?.iban || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      bankInfo: { ...settings.bankInfo, iban: e.target.value }
+                    })}
+                    placeholder="Örn: TR00 0000 0000 0000 0000 0000 00"
+                  />
+                </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Hesap Numarası</Label>
+                    <Input
+                      value={settings.bankInfo?.accountNumber || ''}
+                      onChange={(e) => setSettings({
+                        ...settings,
+                        bankInfo: { ...settings.bankInfo, accountNumber: e.target.value }
+                      })}
+                      placeholder="Hesap No"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Şube Kodu</Label>
+                    <Input
+                      value={settings.bankInfo?.branchCode || ''}
+                      onChange={(e) => setSettings({
+                        ...settings,
+                        bankInfo: { ...settings.bankInfo, branchCode: e.target.value }
+                      })}
+                      placeholder="Şube Kodu"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Açıklama/Not</Label>
+                  <Textarea
+                    value={settings.bankInfo?.description || ''}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      bankInfo: { ...settings.bankInfo, description: e.target.value }
+                    })}
+                    rows={3}
+                    placeholder="Örn: Lütfen açıklama kısmına kullanıcı adınızı yazın"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Footer Tab */}
           <TabsContent value="footer" className="space-y-6">
             <Card>
