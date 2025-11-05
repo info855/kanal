@@ -1,12 +1,18 @@
 import socketio
+import os
 from database import db
 from datetime import datetime
 import uuid
 
+# Get allowed origins from environment
+cors_origins = os.getenv('CORS_ORIGINS', '*')
+if cors_origins != '*':
+    cors_origins = cors_origins.split(',')
+
 # Create Socket.IO server
 sio = socketio.AsyncServer(
     async_mode='asgi',
-    cors_allowed_origins='*',
+    cors_allowed_origins=cors_origins,
     logger=True,
     engineio_logger=True
 )
