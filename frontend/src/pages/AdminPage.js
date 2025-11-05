@@ -500,6 +500,180 @@ const AdminPage = () => {
               </Card>
             </div>
           </TabsContent>
+
+          {/* Wallet Management Tab */}
+          <TabsContent value="wallet" className="space-y-6">
+            {/* Pending Deposit Requests */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center">
+                      <Wallet className="w-5 h-5 mr-2" />
+                      Bekleyen Ödeme Bildirimleri
+                    </CardTitle>
+                    <CardDescription>Kullanıcıların onay bekleyen ödeme bildirimleri</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={fetchDepositRequests}>
+                    Yenile
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {walletLoading ? (
+                  <div className="text-center py-8">Yükleniyor...</div>
+                ) : depositRequests.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <p>Bekleyen ödeme bildirimi yok</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {depositRequests.map((request) => (
+                      <Card key={request._id} className="border-2">
+                        <CardContent className="pt-6">
+                          <div className="grid md:grid-cols-2 gap-6">
+                            {/* Request Details */}
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-lg font-semibold">{request.amount} TL</h4>
+                                <Badge className="bg-yellow-100 text-yellow-700">
+                                  <Clock className="w-3 h-3 mr-1" />
+                                  Bekliyor
+                                </Badge>
+                              </div>
+                              <div className="space-y-2 text-sm">
+                                <p><strong>Kullanıcı:</strong> {request.userName} ({request.userEmail})</p>
+                                <p><strong>Gönderen:</strong> {request.senderName}</p>
+                                <p><strong>Açıklama:</strong> {request.description}</p>
+                                <p><strong>Tarih:</strong> {new Date(request.createdAt).toLocaleString('tr-TR')}</p>
+                                {request.paymentDate && (
+                                  <p><strong>Ödeme Tarihi:</strong> {new Date(request.paymentDate).toLocaleString('tr-TR')}</p>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Admin Actions */}
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <Label>Admin Notu (Opsiyonel)</Label>
+                                <Textarea
+                                  placeholder="Onay/Red nedeni..."
+                                  value={selectedRequest === request._id ? adminNote : ''}
+                                  onChange={(e) => {
+                                    setSelectedRequest(request._id);
+                                    setAdminNote(e.target.value);
+                                  }}
+                                  rows={3}
+                                />
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  className="flex-1 bg-green-600 hover:bg-green-700"
+                                  onClick={() => handleApproveDeposit(request._id)}
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-2" />
+                                  Onayla
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  className="flex-1"
+                                  onClick={() => handleRejectDeposit(request._id)}
+                                >
+                                  <XCircle className="w-4 h-4 mr-2" />
+                                  Reddet
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Manual Balance Adjustment */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Manuel Bakiye Düzeltmesi</CardTitle>
+                <CardDescription>Kullanıcı bakiyesini manuel olarak artırın veya azaltın</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleManualAdjustment} className="space-y-4">
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Kullanıcı ID *</Label>
+                      <Input
+                        placeholder="Kullanıcı ID"
+                        value={manualAdjustment.userId}
+                        onChange={(e) => setManualAdjustment({ ...manualAdjustment, userId: e.target.value })}
+                        required
+                      />
+                      <p className="text-xs text-gray-500">Kullanıcılar sekmesinden ID'yi alabilirsiniz</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tutar (TL) *</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Pozitif veya negatif"
+                        value={manualAdjustment.amount}
+                        onChange={(e) => setManualAdjustment({ ...manualAdjustment, amount: e.target.value })}
+                        required
+                      />
+                      <p className="text-xs text-gray-500">Örn: 500 veya -100</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Açıklama *</Label>
+                      <Input
+                        placeholder="Düzeltme nedeni"
+                        value={manualAdjustment.description}
+                        onChange={(e) => setManualAdjustment({ ...manualAdjustment, description: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <Button type="submit" className="bg-pink-600 hover:bg-pink-700">
+                    Bakiye Güncelle
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">Bekleyen Bildirimler</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{depositRequests.length}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">Bekleyen Toplam</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {depositRequests.reduce((sum, req) => sum + req.amount, 0).toFixed(2)} TL
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">Durum</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-lg font-semibold text-green-600">
+                    {depositRequests.length === 0 ? 'Temiz' : 'İşlem Bekliyor'}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
