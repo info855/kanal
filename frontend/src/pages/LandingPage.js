@@ -48,7 +48,10 @@ const LandingPage = () => {
 
   const features = (settings?.features?.length > 0 ? settings.features : defaultFeatures).map(f => ({
     ...f,
-    icon: iconMap[f.icon] || iconMap.Package
+    // Use imageUrl if available, otherwise fallback to icon
+    displayContent: f.imageUrl ? 
+      <img src={f.imageUrl} alt={f.title} className="w-12 h-12 object-cover rounded" /> : 
+      (iconMap[f.icon] || iconMap.Package)
   }));
 
   const defaultSteps = [
