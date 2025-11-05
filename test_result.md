@@ -366,13 +366,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Admin Settings - Feature images upload"
-    - "Admin Settings - How It Works step images upload"
-    - "Landing Page - Display feature images"
-    - "Landing Page - Display step images"
-  stuck_tasks: []
-  test_all: false
-  test_priority: "high_first"
+    - "Admin Panel Access"
+    - "Chat Widget System"
+  stuck_tasks:
+    - "Admin Panel Access"
+    - "Chat Widget System"
+  test_all: true
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
