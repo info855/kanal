@@ -142,6 +142,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           <Toaster />
+          <ChatWidget />
         </div>
       </BrowserRouter>
       </SettingsProvider>
