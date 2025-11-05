@@ -503,6 +503,21 @@ const AdminPage = () => {
             </div>
           </TabsContent>
 
+          {/* Live Chat Tab */}
+          <TabsContent value="chat" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Canlı Destek Yönetimi</CardTitle>
+                <CardDescription>
+                  Kullanıcılarla canlı destek sohbetleri
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdminChatPanel />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Wallet Management Tab */}
           <TabsContent value="wallet" className="space-y-6">
             {/* Pending Deposit Requests */}
