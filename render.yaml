@@ -19,7 +19,7 @@ services:
           name: enucuzakargo-mongodb
           property: connectionString
       - key: CORS_ORIGINS
-        value: https://enucuzakargo-frontend.onrender.com,https://enucuzakargo-backend.onrender.com
+        value: https://enucuzakargo-frontend.onrender.com
     
   # Frontend Service (Static Site)
   - type: static
