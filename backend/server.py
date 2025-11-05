@@ -23,6 +23,15 @@ load_dotenv(ROOT_DIR / '.env')
 # Create the main app
 app = FastAPI(title="En Ucuza Kargo API", version="1.0.0")
 
+# Root endpoint (for testing)
+@app.get("/api/")
+async def api_root():
+    return {
+        "message": "En Ucuza Kargo API",
+        "version": "1.0.0",
+        "status": "running"
+    }
+
 # Mount Socket.IO
 socket_app = socketio.ASGIApp(sio, app)
 
