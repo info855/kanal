@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Package, TrendingUp, DollarSign, Clock, Bell, Plus, LogOut, Settings, User, MapPin } from 'lucide-react';
+import { Package, TrendingUp, Clock, Bell, Plus, LogOut, Settings, User, MapPin } from 'lucide-react';
 import { ordersAPI, notificationsAPI } from '../services/api';
 import { mockChartData } from '../mock/mockData';
 
