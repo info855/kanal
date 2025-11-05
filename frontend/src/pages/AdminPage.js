@@ -12,6 +12,7 @@ import { Package, Users, TrendingUp, LogOut, Search, MoreVertical, Settings, Wal
 import { mockOrders, mockUsers, mockStats } from '../mock/mockData';
 import { adminWalletAPI } from '../services/api';
 import { toast } from '../hooks/use-toast';
+import AdminChatPanel from '../components/AdminChatPanel';
 
 const AdminPage = () => {
   const navigate = useNavigate();
