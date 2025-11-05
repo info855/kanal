@@ -18,6 +18,17 @@ const AdminPage = () => {
   const { logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('overview');
+  
+  // Wallet states
+  const [depositRequests, setDepositRequests] = useState([]);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [adminNote, setAdminNote] = useState('');
+  const [manualAdjustment, setManualAdjustment] = useState({
+    userId: '',
+    amount: '',
+    description: ''
+  });
 
   const handleLogout = () => {
     logout();
