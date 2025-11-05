@@ -65,6 +65,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Serve React frontend build files
+frontend_build_dir = Path(__file__).parent.parent / "frontend" / "build"
+if frontend_build_dir.exists():
+    # Mount static files
+    app.mount("/static", StaticFiles(directory=str(frontend_build_dir / "static")), name="static")
+    
+    # Serve index.html for all non-API routes
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # If path starts with /api or /socket.io, let FastAPI handle it
+        if full_path.startswith("api") or full_path.startswith("socket.io"):
+            return None
+        
+        # Check if file exists in build directory
+        file_path = frontend_build_dir / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        
+        # Otherwise serve index.html (for React Router)
+        return FileResponse(frontend_build_dir / "index.html")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
