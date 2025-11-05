@@ -30,6 +30,110 @@ const AdminPage = () => {
     description: ''
   });
 
+  useEffect(() => {
+    if (selectedTab === 'wallet') {
+      fetchDepositRequests();
+    }
+  }, [selectedTab]);
+
+  const fetchDepositRequests = async () => {
+    setWalletLoading(true);
+    try {
+      const response = await adminWalletAPI.getDepositRequests({ status: 'pending', limit: 50 });
+      setDepositRequests(response.data.requests || []);
+    } catch (error) {
+      console.error('Error fetching deposit requests:', error);
+      toast({
+        title: 'Hata',
+        description: 'Ödeme bildirimleri yüklenemedi',
+        variant: 'destructive'
+      });
+    } finally {
+      setWalletLoading(false);
+    }
+  };
+
+  const handleApproveDeposit = async (requestId) => {
+    try {
+      await adminWalletAPI.approveDeposit(requestId, { adminNote });
+      toast({
+        title: 'Başarılı',
+        description: 'Ödeme onaylandı ve bakiye yüklendi'
+      });
+      setAdminNote('');
+      setSelectedRequest(null);
+      fetchDepositRequests();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Ödeme onaylanamadı',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleRejectDeposit = async (requestId) => {
+    if (!adminNote) {
+      toast({
+        title: 'Hata',
+        description: 'Lütfen red sebebini yazın',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    try {
+      await adminWalletAPI.rejectDeposit(requestId, { adminNote });
+      toast({
+        title: 'Başarılı',
+        description: 'Ödeme reddedildi'
+      });
+      setAdminNote('');
+      setSelectedRequest(null);
+      fetchDepositRequests();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Ödeme reddedilemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleManualAdjustment = async (e) => {
+    e.preventDefault();
+    
+    if (!manualAdjustment.userId || !manualAdjustment.amount || !manualAdjustment.description) {
+      toast({
+        title: 'Hata',
+        description: 'Tüm alanları doldurun',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    try {
+      await adminWalletAPI.manualBalanceAdjustment({
+        userId: manualAdjustment.userId,
+        amount: parseFloat(manualAdjustment.amount),
+        description: manualAdjustment.description
+      });
+      
+      toast({
+        title: 'Başarılı',
+        description: 'Bakiye güncellendi'
+      });
+      
+      setManualAdjustment({ userId: '', amount: '', description: '' });
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Bakiye güncellenemedi',
+        variant: 'destructive'
+      });
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');
