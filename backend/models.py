@@ -241,6 +241,7 @@ class SiteSettings(BaseModel):
     faqs: List[FAQItem] = []
     footerSections: List[FooterSection] = []
     aboutPage: str = ""
+    bankInfo: BankInfo = BankInfo()
     updatedAt: datetime = Field(default_factory=datetime.utcnow)
 
 class SiteSettingsUpdate(BaseModel):
