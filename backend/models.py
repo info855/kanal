@@ -206,10 +206,13 @@ class HeroContent(BaseModel):
 
 class Feature(BaseModel):
     icon: str
+    imageUrl: Optional[str] = None  # For custom uploaded images
     title: str
     description: str
 
 class HowItWorksStep(BaseModel):
+    icon: Optional[str] = None  # For icon selection
+    imageUrl: Optional[str] = None  # For custom uploaded images
     title: str
     description: str
 
