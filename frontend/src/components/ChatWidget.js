@@ -129,7 +129,7 @@ const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-2xl z-50 flex flex-col">
+        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-2xl flex flex-col" style={{ zIndex: 99999 }}>
           <CardHeader className="bg-pink-600 text-white flex flex-row items-center justify-between py-3">
             <CardTitle className="text-lg flex items-center">
               <MessageCircle className="w-5 h-5 mr-2" />
