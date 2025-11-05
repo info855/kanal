@@ -420,6 +420,23 @@ const AdminSettingsPage = () => {
                       />
                       <p className="text-xs text-gray-500">Kullanılabilir ikonlar: Package, TrendingUp, Shield, Zap, BarChart3, Clock, CheckCircle2, Users</p>
                     </div>
+                    <div className="space-y-2">
+                      <Label>Veya Kendi Görselinizi Yükleyin</Label>
+                      <div className="flex items-center gap-4">
+                        {settings.features?.[index]?.imageUrl && (
+                          <img src={settings.features[index].imageUrl} alt="Feature" className="h-12 w-12 object-cover rounded" />
+                        )}
+                        <MediaPicker
+                          value={settings.features?.[index]?.imageUrl || ''}
+                          onSelect={(url) => {
+                            const newFeatures = [...(settings.features || [])];
+                            newFeatures[index] = { ...newFeatures[index], imageUrl: url };
+                            setSettings({ ...settings, features: newFeatures });
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">Görsel yüklenirse icon yerine görsel kullanılır</p>
+                    </div>
                   </div>
                 ))}
               </CardContent>
