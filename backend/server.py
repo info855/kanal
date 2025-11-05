@@ -66,15 +66,30 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Serve React frontend build files
+# In Render, the structure is: /opt/render/project/src/
 frontend_build_dir = Path(__file__).parent.parent / "frontend" / "build"
+
+logger.info(f"Looking for frontend build at: {frontend_build_dir}")
+logger.info(f"Frontend build exists: {frontend_build_dir.exists()}")
+
 if frontend_build_dir.exists():
-    # Mount static files
-    app.mount("/static", StaticFiles(directory=str(frontend_build_dir / "static")), name="static")
+    logger.info("Frontend build found! Serving static files...")
     
-    # Serve index.html for all non-API routes
+    # Mount static files (CSS, JS, images)
+    static_dir = frontend_build_dir / "static"
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+    
+    # Serve other assets
+    for asset_dir in ["images", "fonts", "media"]:
+        asset_path = frontend_build_dir / asset_dir
+        if asset_path.exists():
+            app.mount(f"/{asset_dir}", StaticFiles(directory=str(asset_path)), name=asset_dir)
+    
+    # Serve index.html for all non-API routes (must be last)
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
-        # If path starts with /api or /socket.io, let FastAPI handle it
+        # API and Socket.IO routes - skip to FastAPI handlers
         if full_path.startswith("api") or full_path.startswith("socket.io"):
             return None
         
@@ -83,8 +98,16 @@ if frontend_build_dir.exists():
         if file_path.is_file():
             return FileResponse(file_path)
         
-        # Otherwise serve index.html (for React Router)
-        return FileResponse(frontend_build_dir / "index.html")
+        # For all other routes, serve index.html (React Router)
+        index_path = frontend_build_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+        else:
+            logger.error(f"index.html not found at {index_path}")
+            return {"error": "Frontend not built"}
+else:
+    logger.warning(f"Frontend build directory not found at {frontend_build_dir}")
+    logger.warning("Frontend will not be served. Only API endpoints available.")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
