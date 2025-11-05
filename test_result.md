@@ -101,3 +101,150 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Implement Media Library feature with image upload capability. Allow admins to upload images for site logo, cargo company logos, features icons, and 'How It Works' step icons. Users should be able to choose between using default icons or custom uploaded images."
+
+backend:
+  - task: "Media upload endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/media_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created media upload endpoint with multiple file support, saves to /app/frontend/public/uploads directory and stores metadata in MongoDB"
+
+  - task: "Media list endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/media_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created endpoint to fetch all media items with pagination"
+
+  - task: "Media delete endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/media_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created endpoint to delete media from database and filesystem"
+
+  - task: "Feature and HowItWorksStep models updated"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added imageUrl field to Feature model and both icon and imageUrl to HowItWorksStep model for flexible image/icon selection"
+
+frontend:
+  - task: "MediaPicker component"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/MediaPicker.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "MediaPicker component already exists with upload, select, and delete functionality"
+
+  - task: "Admin Settings - Logo upload"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminSettingsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Logo upload already integrated with MediaPicker in General Settings tab"
+
+  - task: "Admin Settings - Feature images upload"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminSettingsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added MediaPicker to each of 4 features in Content tab. Users can choose icon or upload custom image"
+
+  - task: "Admin Settings - How It Works step images upload"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminSettingsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added icon input field and MediaPicker to each of 3 'How It Works' steps. Users can choose icon or upload custom image"
+
+  - task: "Landing Page - Display feature images"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LandingPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated features rendering to use imageUrl if available, otherwise fallback to icon"
+
+  - task: "Landing Page - Display step images"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LandingPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated steps rendering to use imageUrl if available, otherwise fallback to icon"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Media upload endpoint"
+    - "Media list endpoint"
+    - "Media delete endpoint"
+    - "Admin Settings - Feature images upload"
+    - "Admin Settings - How It Works step images upload"
+    - "Landing Page - Display feature images"
+    - "Landing Page - Display step images"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Implemented complete Media Library feature. Backend has upload/list/delete endpoints for media. Frontend has MediaPicker component integrated into Admin Settings for logo, features, and 'How It Works' steps. Landing page updated to display custom images when available, otherwise fallback to icons. Ready for testing. Test credentials - admin user: email (check seed_data.py for admin credentials)"
