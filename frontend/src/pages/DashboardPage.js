@@ -109,7 +109,7 @@ const DashboardPage = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Bakiye</CardTitle>
-                <DollarSign className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-semibold text-gray-500">₺</span>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{user?.balance?.toFixed(2)} TL</div>
