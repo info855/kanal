@@ -1,15 +1,18 @@
 services:
-  # Backend Service
+  # Full-Stack Application (Backend + Frontend)
   - type: web
-    name: enucuzakargo-backend
+    name: enucuzakargo
     env: python
     region: frankfurt
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn server:socket_app --host 0.0.0.0 --port $PORT
+    buildCommand: |
+      pip install -r backend/requirements.txt
+      cd frontend && yarn install && yarn build
+    startCommand: cd backend && uvicorn server:socket_app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: NODE_VERSION
+        value: 18.17.0
       - key: SECRET_KEY
         generateValue: true
       - key: DB_NAME
@@ -19,21 +22,7 @@ services:
           name: enucuzakargo-mongodb
           property: connectionString
       - key: CORS_ORIGINS
-        value: https://enucuzakargo-frontend.onrender.com
-    
-  # Frontend Service
-  - type: web
-    name: enucuzakargo-frontend
-    env: node
-    region: frankfurt
-    rootDir: frontend
-    buildCommand: yarn install && yarn build
-    startCommand: npx serve -s build -l $PORT
-    envVars:
-      - key: NODE_VERSION
-        value: 18.17.0
-      - key: REACT_APP_BACKEND_URL
-        value: https://enucuzakargo-backend.onrender.com
+        value: "*"
 
 databases:
   - name: enucuzakargo-mongodb
