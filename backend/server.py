@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+import socketio
 import os
 import logging
 from pathlib import Path
@@ -11,11 +12,17 @@ from database import db, client
 # Import routes
 from routes import auth_routes, order_routes, admin_routes, user_routes, shipping_routes, notification_routes, settings_routes, media_routes, wallet_routes, admin_wallet_routes
 
+# Import socket manager
+from socket_manager import sio
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # Create the main app
 app = FastAPI(title="En Ucuza Kargo API", version="1.0.0")
+
+# Mount Socket.IO
+socket_app = socketio.ASGIApp(sio, app)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
