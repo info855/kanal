@@ -117,6 +117,54 @@ if frontend_build_dir.exists():
 else:
     logger.warning(f"Frontend build directory not found at {frontend_build_dir}")
     logger.warning("Frontend will not be served. Only API endpoints available.")
+    
+    # Fallback: Serve a simple HTML page when frontend is not available
+    @app.get("/", response_class=HTMLResponse)
+    async def root_fallback():
+        return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>En Ucuza Kargo</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                }
+                .container {
+                    text-align: center;
+                    padding: 40px;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 20px;
+                    backdrop-filter: blur(10px);
+                }
+                h1 { font-size: 2.5em; margin-bottom: 20px; }
+                p { font-size: 1.2em; margin: 10px 0; }
+                .status { color: #4ade80; }
+                .error { color: #fbbf24; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🚀 En Ucuza Kargo</h1>
+                <p class="status">✅ Backend API Çalışıyor</p>
+                <p class="error">⚠️ Frontend build bulunamadı</p>
+                <p>API Endpoint: <a href="/api/" style="color: white;">/api/</a></p>
+                <hr style="margin: 30px 0; opacity: 0.3;">
+                <p style="font-size: 0.9em; opacity: 0.8;">
+                    Frontend build edilmedi veya yanlış konumda.<br>
+                    Lütfen build loglarını kontrol edin.
+                </p>
+            </div>
+        </body>
+        </html>
+        """
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
