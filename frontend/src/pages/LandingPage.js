@@ -83,7 +83,10 @@ const LandingPage = () => {
 
   const steps = (settings?.howItWorks?.length > 0 ? settings.howItWorks : defaultSteps).map((step, idx) => ({
     number: String(idx + 1),
-    icon: stepIcons[step.icon || defaultSteps[idx]?.icon] || stepIcons.Package,
+    // Use imageUrl if available, otherwise fallback to icon
+    displayContent: step.imageUrl ? 
+      <img src={step.imageUrl} alt={step.title} className="w-10 h-10 object-cover rounded" /> : 
+      (stepIcons[step.icon || defaultSteps[idx]?.icon] || stepIcons.Package),
     title: step.title,
     description: step.description
   }));
