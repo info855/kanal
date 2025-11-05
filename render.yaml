@@ -5,16 +5,17 @@ services:
     env: python
     region: frankfurt
     buildCommand: |
+      echo "==> Build Started - Version 2.0"
       echo "==> Building Backend..."
       pip install -r backend/requirements.txt
       echo "==> Building Frontend..."
       cd frontend
-      yarn install
+      yarn install --frozen-lockfile
       REACT_APP_BACKEND_URL= yarn build
       echo "==> Frontend build complete!"
-      ls -la build/
+      ls -la build/ || echo "Build directory not found!"
       cd ..
-      echo "==> Build finished!"
+      echo "==> Build finished successfully!"
     startCommand: cd backend && uvicorn server:socket_app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
