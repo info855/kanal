@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { Toaster } from './components/ui/toaster';
+import ChatWidget from './components/ChatWidget';
 
 // Pages
 import LandingPage from './pages/LandingPage';
