@@ -253,7 +253,7 @@ const LandingPage = () => {
                 <Card className="border-none shadow-lg">
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-pink-700 rounded-full flex items-center justify-center mb-4 mx-auto">
-                      {step.icon}
+                      {step.displayContent}
                     </div>
                     <CardTitle className="text-xl text-center">{step.title}</CardTitle>
                   </CardHeader>
