@@ -49,8 +49,12 @@ const TrackingPage = () => {
               <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-              <div className="flex items-center space-x-2">
-                <Package className="w-8 h-8 text-pink-600" />
+              <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
+                {settings?.logo ? (
+                  <img src={settings.logo} alt={settings.siteName} className="h-8 w-auto" />
+                ) : (
+                  <Package className="w-8 h-8 text-pink-600" />
+                )}
                 <span className="text-2xl font-bold text-gray-900">Kargo Takip</span>
               </div>
             </div>
