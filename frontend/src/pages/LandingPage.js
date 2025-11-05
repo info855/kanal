@@ -166,7 +166,7 @@ const LandingPage = () => {
             {features.map((feature, idx) => (
               <Card key={idx} className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                 <CardHeader>
-                  <div className="mb-4">{feature.icon}</div>
+                  <div className="mb-4">{feature.displayContent}</div>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
