@@ -273,3 +273,62 @@ class PricingTable(BaseModel):
 
 class PricingTableUpdate(BaseModel):
     rows: List[PricingRow]
+
+
+# Wallet Models
+class BankInfo(BaseModel):
+    bankName: str = ""
+    accountHolder: str = ""
+    iban: str = ""
+    accountNumber: str = ""
+    branchCode: str = ""
+    description: str = ""
+
+class Transaction(BaseModel):
+    id: str = Field(alias="_id")
+    userId: str
+    type: str  # 'deposit', 'payment', 'refund', 'admin_adjustment'
+    amount: float
+    balanceBefore: float
+    balanceAfter: float
+    description: str
+    orderId: Optional[str] = None  # For payment transactions
+    depositRequestId: Optional[str] = None  # For deposit transactions
+    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class DepositRequest(BaseModel):
+    id: str = Field(alias="_id")
+    userId: str
+    userName: str
+    userEmail: str
+    amount: float
+    senderName: str
+    description: str  # User's reference code (e.g., KARGO-USER123)
+    paymentDate: Optional[datetime] = None
+    status: str = "pending"  # 'pending', 'approved', 'rejected'
+    adminNote: Optional[str] = None
+    approvedBy: Optional[str] = None  # Admin user ID
+    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    updatedAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class DepositRequestCreate(BaseModel):
+    amount: float
+    senderName: str
+    description: str
+    paymentDate: Optional[datetime] = None
+
+class DepositRequestApprove(BaseModel):
+    adminNote: Optional[str] = None
+
+class ManualBalanceAdjustment(BaseModel):
+    userId: str
+    amount: float  # Can be positive or negative
+    description: str
