@@ -12,6 +12,7 @@ import { mockChartData } from '../mock/mockData';
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { settings } = useSettings();
   const [orders, setOrders] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
