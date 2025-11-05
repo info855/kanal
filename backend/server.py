@@ -35,6 +35,8 @@ app.include_router(shipping_routes.router)
 app.include_router(notification_routes.router)
 app.include_router(settings_routes.router)
 app.include_router(media_routes.router)
+app.include_router(wallet_routes.router)
+app.include_router(admin_wallet_routes.router)
 
 # Include the main api router
 app.include_router(api_router)
