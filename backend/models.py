@@ -257,6 +257,7 @@ class SiteSettingsUpdate(BaseModel):
     faqs: Optional[List[FAQItem]] = None
     footerSections: Optional[List[FooterSection]] = None
     aboutPage: Optional[str] = None
+    bankInfo: Optional[BankInfo] = None
 
 # Pricing Models
 class PricingRow(BaseModel):
