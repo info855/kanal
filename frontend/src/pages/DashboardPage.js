@@ -57,9 +57,13 @@ const DashboardPage = () => {
       <header className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Package className="w-8 h-8 text-pink-600" />
-              <span className="text-2xl font-bold text-gray-900">En Ucuza Kargo</span>
+            <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
+              {settings?.logo ? (
+                <img src={settings.logo} alt={settings.siteName} className="h-8 w-auto" />
+              ) : (
+                <Package className="w-8 h-8 text-pink-600" />
+              )}
+              <span className="text-2xl font-bold text-gray-900">{settings?.siteName || 'En Ucuza Kargo'}</span>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="icon" className="relative">
