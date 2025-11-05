@@ -203,16 +203,12 @@ const AdminSettingsPage = () => {
                     {settings.logo && (
                       <img src={settings.logo} alt="Logo" className="h-12 w-auto" />
                     )}
-                    <label className="cursor-pointer">
-                      <Button variant="outline" asChild>
-                        <span>
-                          <Upload className="w-4 h-4 mr-2" />
-                          Logo Yükle
-                        </span>
-                      </Button>
-                      <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
-                    </label>
+                    <MediaPicker
+                      value={settings.logo}
+                      onSelect={(url) => setSettings({ ...settings, logo: url })}
+                    />
                   </div>
+                  <p className="text-xs text-gray-500">Medya kütüphanesinden logo seçin veya yükleyin</p>
                 </div>
 
                 <div className="space-y-2">
