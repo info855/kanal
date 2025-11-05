@@ -228,6 +228,14 @@ class FooterSection(BaseModel):
     title: str
     links: List[FooterLink]
 
+class BankInfo(BaseModel):
+    bankName: str = ""
+    accountHolder: str = ""
+    iban: str = ""
+    accountNumber: str = ""
+    branchCode: str = ""
+    description: str = ""
+
 class SiteSettings(BaseModel):
     siteName: str = "En Ucuza Kargo"
     logo: str = ""
