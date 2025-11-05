@@ -13,6 +13,7 @@ import { toast } from '../hooks/use-toast';
 
 const NewShipmentPage = () => {
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const [shippingCompanies, setShippingCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
