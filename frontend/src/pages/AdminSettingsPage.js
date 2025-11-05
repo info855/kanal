@@ -666,10 +666,13 @@ const AdminSettingsPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Logo URL</Label>
-                    <Input
+                    <Label>Logo</Label>
+                    {editingCompany.logo && (
+                      <img src={editingCompany.logo} alt="Logo" className="h-16 w-auto mb-2" />
+                    )}
+                    <MediaPicker
                       value={editingCompany.logo}
-                      onChange={(e) => setEditingCompany({ ...editingCompany, logo: e.target.value })}
+                      onSelect={(url) => setEditingCompany({ ...editingCompany, logo: url })}
                     />
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
