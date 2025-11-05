@@ -88,12 +88,31 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(get
     
     # Update user balance and shipment count
     if order_data.paymentType == "prepaid":
+        old_balance = user.get("balance", 0.0)
+        new_balance = old_balance - shipping_company["price"]
+        
         await db.users.update_one(
             {"_id": ObjectId(current_user["userId"])},
             {
-                "$inc": {"balance": -shipping_company["price"], "totalShipments": 1}
+                "$set": {"balance": new_balance},
+                "$inc": {"totalShipments": 1}
             }
         )
+        
+        # Create transaction record
+        import uuid
+        transaction = {
+            "_id": str(uuid.uuid4()),
+            "userId": current_user["userId"],
+            "type": "payment",
+            "amount": -shipping_company["price"],
+            "balanceBefore": old_balance,
+            "balanceAfter": new_balance,
+            "description": f"Kargo gönderimi - {shipping_company['name']} - {order_id}",
+            "orderId": order_id,
+            "createdAt": datetime.utcnow()
+        }
+        await db.transactions.insert_one(transaction)
     else:
         await db.users.update_one(
             {"_id": ObjectId(current_user["userId"])},
