@@ -475,6 +475,35 @@ const AdminSettingsPage = () => {
                         placeholder="Adım açıklaması"
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label>İkon (Lucide React ismi - opsiyonel)</Label>
+                      <Input
+                        value={settings.howItWorks?.[index]?.icon || ''}
+                        onChange={(e) => {
+                          const newSteps = [...(settings.howItWorks || [])];
+                          newSteps[index] = { ...newSteps[index], icon: e.target.value };
+                          setSettings({ ...settings, howItWorks: newSteps });
+                        }}
+                        placeholder="Örn: CheckCircle2, Package, Zap"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Veya Kendi Görselinizi Yükleyin</Label>
+                      <div className="flex items-center gap-4">
+                        {settings.howItWorks?.[index]?.imageUrl && (
+                          <img src={settings.howItWorks[index].imageUrl} alt="Step" className="h-12 w-12 object-cover rounded" />
+                        )}
+                        <MediaPicker
+                          value={settings.howItWorks?.[index]?.imageUrl || ''}
+                          onSelect={(url) => {
+                            const newSteps = [...(settings.howItWorks || [])];
+                            newSteps[index] = { ...newSteps[index], imageUrl: url };
+                            setSettings({ ...settings, howItWorks: newSteps });
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">Görsel yüklenirse icon yerine görsel kullanılır</p>
+                    </div>
                   </div>
                 ))}
               </CardContent>
