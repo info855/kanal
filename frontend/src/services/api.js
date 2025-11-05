@@ -115,4 +115,21 @@ export const mediaAPI = {
   delete: (id) => api.delete(`/media/${id}`)
 };
 
+// Wallet API
+export const walletAPI = {
+  getBalance: () => api.get('/wallet/balance'),
+  getTransactions: (params) => api.get('/wallet/transactions', { params }),
+  createDepositRequest: (data) => api.post('/wallet/deposit-request', data),
+  getDepositRequests: (params) => api.get('/wallet/deposit-requests', { params })
+};
+
+// Admin Wallet API
+export const adminWalletAPI = {
+  getDepositRequests: (params) => api.get('/admin/wallet/deposit-requests', { params }),
+  approveDeposit: (requestId, data) => api.post(`/admin/wallet/approve-deposit/${requestId}`, data),
+  rejectDeposit: (requestId, data) => api.post(`/admin/wallet/reject-deposit/${requestId}`, data),
+  manualBalanceAdjustment: (data) => api.post('/admin/wallet/manual-balance', data),
+  getUserTransactions: (userId, params) => api.get(`/admin/wallet/user-transactions/${userId}`, { params })
+};
+
 export default api;
