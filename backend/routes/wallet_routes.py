@@ -67,7 +67,7 @@ async def create_deposit_request(
         )
     
     # Get user info
-    user = await db.users.find_one({"_id": current_user["userId"]})
+    user = await db.users.find_one({"_id": ObjectId(current_user["userId"])})
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
