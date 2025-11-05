@@ -11,6 +11,7 @@ import { ordersAPI } from '../services/api';
 const TrackingPage = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const [trackingCode, setTrackingCode] = useState('');
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
