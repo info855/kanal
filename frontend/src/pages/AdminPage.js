@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Textarea } from '../components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Package, Users, TrendingUp, LogOut, Search, MoreVertical, Settings } from 'lucide-react';
+import { Package, Users, TrendingUp, LogOut, Search, MoreVertical, Settings, Wallet, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import { mockOrders, mockUsers, mockStats } from '../mock/mockData';
+import { adminWalletAPI } from '../services/api';
+import { toast } from '../hooks/use-toast';
 
 const AdminPage = () => {
   const navigate = useNavigate();
