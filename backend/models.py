@@ -333,3 +333,38 @@ class ManualBalanceAdjustment(BaseModel):
     userId: str
     amount: float  # Can be positive or negative
     description: str
+
+
+# Chat Models
+class ChatSession(BaseModel):
+    id: str = Field(alias="_id")
+    userId: str
+    userName: str
+    userEmail: str
+    agentId: Optional[str] = None
+    agentName: Optional[str] = None
+    status: str = "waiting"  # 'waiting', 'active', 'closed'
+    startedAt: datetime = Field(default_factory=datetime.utcnow)
+    endedAt: Optional[datetime] = None
+    lastMessageAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ChatMessage(BaseModel):
+    id: str = Field(alias="_id")
+    sessionId: str
+    sender: str  # 'user', 'agent', 'bot'
+    senderName: str
+    text: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    read: bool = False
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ChatMessageCreate(BaseModel):
+    sessionId: str
+    text: str
