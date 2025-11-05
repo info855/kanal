@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { ArrowLeft, Settings, Save, Upload, Plus, Edit, Trash2 } from 'lucide-react';
 import { settingsAPI, shippingAPI } from '../services/api';
 import { toast } from '../hooks/use-toast';
+import MediaPicker from '../components/MediaPicker';
 
 const AdminSettingsPage = () => {
   const navigate = useNavigate();
