@@ -10,6 +10,7 @@ import { ordersAPI } from '../services/api';
 
 const OrdersListPage = () => {
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
