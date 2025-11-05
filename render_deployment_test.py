@@ -12,8 +12,8 @@ from pathlib import Path
 import time
 import uuid
 
-# Configuration - Use environment variable from frontend/.env
-BACKEND_URL = "https://fast-cargo-1.preview.emergentagent.com/api"
+# Configuration - Use Render deployment URL
+BACKEND_URL = "https://enucuzakargo.onrender.com/api"
 ADMIN_EMAIL = "admin@enucuzakargo.com"
 ADMIN_PASSWORD = "admin123"
 
