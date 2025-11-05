@@ -110,6 +110,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard/balance"
+              element={
+                <ProtectedRoute>
+                  <BalancePage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected Admin Routes */}
             <Route
