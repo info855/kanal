@@ -14,6 +14,7 @@ import TrackingPage from './pages/TrackingPage';
 import NewShipmentPage from './pages/NewShipmentPage';
 import OrdersListPage from './pages/OrdersListPage';
 import SettingsPage from './pages/SettingsPage';
+import BalancePage from './pages/BalancePage';
 import AdminPage from './pages/AdminPage';
 import AdminSettingsPage from './pages/AdminSettingsPage';
 import AboutPage from './pages/AboutPage';
