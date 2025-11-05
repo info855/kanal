@@ -29,11 +29,21 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(get
         )
     
     # Check balance for prepaid orders
+    MINIMUM_BALANCE = 100.0
     if order_data.paymentType == "prepaid":
-        if user.get("balance", 0) < shipping_company["price"]:
+        current_balance = user.get("balance", 0)
+        if current_balance < shipping_company["price"]:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Yetersiz bakiye"
+            )
+        
+        # Check if balance will fall below minimum after payment
+        balance_after = current_balance - shipping_company["price"]
+        if balance_after < MINIMUM_BALANCE:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"İşlem sonrası bakiyeniz {MINIMUM_BALANCE} TL'nin altına düşemez. Lütfen bakiye yükleyin."
             )
     
     # Generate order ID and tracking code
