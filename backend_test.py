@@ -15,7 +15,7 @@ import uuid
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://kargohub.preview.emergentagent.com/api"
+BACKEND_URL = "https://kargo-deploy-fix.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@enucuzakargo.com"
 ADMIN_PASSWORD = "admin123"
 DEMO_USER_EMAIL = "ali@example.com"

@@ -91,7 +91,7 @@ CORS_ORIGINS=*
 
 Local'de çalışırken `frontend/.env` dosyası kullanılır:
 ```
-REACT_APP_BACKEND_URL=https://kargohub.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://kargo-deploy-fix.preview.emergentagent.com
 ```
 
 Production build için `.env.production` kullanılır (şu an boş, build time'da set ediliyor).
