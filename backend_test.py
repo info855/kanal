@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for En Ucuza Kargo Media Library
-Tests authentication, media upload, list, and delete endpoints
+Comprehensive Backend API Testing for En Ucuza Kargo
+Tests all critical backend features including authentication, wallet system, 
+media library, settings, shipping companies, and order management
 """
 
 import requests
@@ -10,11 +11,15 @@ import os
 import tempfile
 from pathlib import Path
 import time
+import uuid
+from datetime import datetime
 
 # Configuration
 BACKEND_URL = "https://kargohub.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@enucuzakargo.com"
 ADMIN_PASSWORD = "admin123"
+DEMO_USER_EMAIL = "ali@example.com"
+DEMO_USER_PASSWORD = "demo123"
 
 class MediaLibraryTester:
     def __init__(self):
