@@ -385,3 +385,33 @@ class ChatMessage(BaseModel):
 class ChatMessageCreate(BaseModel):
     sessionId: str
     text: str
+
+# Profile Update Request Models
+class ProfileUpdateRequest(BaseModel):
+    id: str = Field(alias="_id")
+    userId: str
+    userName: str
+    userEmail: str
+    updateType: str  # 'email', 'phone'
+    currentValue: str
+    newValue: str
+    status: str = "pending"  # 'pending', 'approved', 'rejected'
+    adminNote: Optional[str] = None
+    reviewedBy: Optional[str] = None
+    reviewedAt: Optional[datetime] = None
+    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ProfileUpdateRequestCreate(BaseModel):
+    updateType: str
+    newValue: str
+
+class ProfileUpdateReview(BaseModel):
+    adminNote: Optional[str] = None
+
+class PasswordChangeRequest(BaseModel):
+    currentPassword: str
+    newPassword: str
