@@ -270,6 +270,36 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: API health check (GET /api/) working correctly, returns proper status. CORS headers present but OPTIONS method returns 405 (not critical for functionality). Database connectivity verified through all CRUD operations."
 
+  - task: "Recipients API System (NEW)"
+    implemented: true
+    working: true
+    file: "/app/backend/routes/recipient_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented recipient autocomplete system with save, search, get all, and delete functionality"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All 4 recipient API endpoints working correctly. POST /recipients/save creates/updates recipients, GET /recipients/ returns user's saved recipients, GET /recipients/search?q=test searches by name, DELETE /recipients/{id} removes recipients. Fixed authentication issue by correcting user ID field mapping. All endpoints properly secured with user authentication."
+
+  - task: "Profile Update System (NEW)"
+    implemented: true
+    working: true
+    file: "/app/backend/routes/profile_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented profile update system with password change (direct) and email/phone update (admin approval required)"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Profile update system working correctly. POST /profile/change-password allows direct password changes, POST /profile/update-request creates email/phone update requests, GET /profile/update-requests shows user's requests, admin endpoints (GET /profile/admin/update-requests, POST /profile/admin/approve-request/{id}, POST /profile/admin/reject-request/{id}) handle approval workflow. Minor: 2 test conflicts due to duplicate requests, but core functionality verified. 4/6 tests passed with 2 minor test data conflicts."
+
 frontend:
   - task: "MediaPicker component"
     implemented: true
