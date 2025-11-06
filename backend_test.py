@@ -966,7 +966,7 @@ class ComprehensiveBackendTester:
         media_id = self.uploaded_media_ids[0]
         
         try:
-            response = self.session.delete(f"{BACKEND_URL}/media/{media_id}")
+            response = self.admin_session.delete(f"{BACKEND_URL}/media/{media_id}")
             self.log(f"Media delete response status: {response.status_code}")
             
             if response.status_code == 200:
