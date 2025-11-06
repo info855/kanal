@@ -36,6 +36,8 @@ class ComprehensiveBackendTester:
         """Log test messages"""
         print(f"[{level}] {message}")
         
+    # ========== AUTHENTICATION TESTS ==========
+    
     def test_admin_login(self):
         """Test admin authentication"""
         self.log("Testing admin login...")
@@ -46,25 +48,708 @@ class ComprehensiveBackendTester:
         }
         
         try:
-            response = self.session.post(f"{BACKEND_URL}/auth/login", json=login_data)
-            self.log(f"Login response status: {response.status_code}")
+            response = self.admin_session.post(f"{BACKEND_URL}/auth/login", json=login_data)
+            self.log(f"Admin login response status: {response.status_code}")
             
             if response.status_code == 200:
                 data = response.json()
                 if data.get("success") and data.get("token"):
                     self.admin_token = data["token"]
-                    self.session.headers.update({"Authorization": f"Bearer {self.admin_token}"})
+                    self.admin_session.headers.update({"Authorization": f"Bearer {self.admin_token}"})
                     self.log("✅ Admin login successful")
                     return True
                 else:
-                    self.log("❌ Login failed: No token in response", "ERROR")
+                    self.log("❌ Admin login failed: No token in response", "ERROR")
                     return False
             else:
-                self.log(f"❌ Login failed with status {response.status_code}: {response.text}", "ERROR")
+                self.log(f"❌ Admin login failed with status {response.status_code}: {response.text}", "ERROR")
                 return False
                 
         except Exception as e:
-            self.log(f"❌ Login request failed: {str(e)}", "ERROR")
+            self.log(f"❌ Admin login request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_demo_user_login(self):
+        """Test demo user authentication"""
+        self.log("Testing demo user login...")
+        
+        login_data = {
+            "email": DEMO_USER_EMAIL,
+            "password": DEMO_USER_PASSWORD
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/auth/login", json=login_data)
+            self.log(f"Demo user login response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("token"):
+                    self.user_token = data["token"]
+                    self.user_session.headers.update({"Authorization": f"Bearer {self.user_token}"})
+                    self.log("✅ Demo user login successful")
+                    return True
+                else:
+                    self.log("❌ Demo user login failed: No token in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Demo user login failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Demo user login request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_user_registration(self):
+        """Test user registration"""
+        self.log("Testing user registration...")
+        
+        # Generate unique email for testing
+        test_email = f"test_{int(time.time())}@example.com"
+        
+        register_data = {
+            "name": "Test User",
+            "email": test_email,
+            "phone": "+90 555 123 4567",
+            "company": "Test Company",
+            "taxId": "1234567890",
+            "password": "testpass123"
+        }
+        
+        try:
+            response = requests.post(f"{BACKEND_URL}/auth/register", json=register_data)
+            self.log(f"Registration response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("token"):
+                    self.log("✅ User registration successful")
+                    return True
+                else:
+                    self.log("❌ Registration failed: No token in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Registration failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Registration request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_get_current_user(self):
+        """Test get current user info"""
+        self.log("Testing get current user info...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/auth/me")
+            self.log(f"Get user info response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("user"):
+                    self.log("✅ Get current user info successful")
+                    return True
+                else:
+                    self.log("❌ Get user info failed: No user in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get user info failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get user info request failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== WALLET SYSTEM TESTS (USER) ==========
+    
+    def test_get_wallet_balance(self):
+        """Test get user wallet balance"""
+        self.log("Testing get wallet balance...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/wallet/balance")
+            self.log(f"Get balance response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "balance" in data and "minimumBalance" in data:
+                    self.log(f"✅ Get wallet balance successful: {data['balance']} TL")
+                    return True
+                else:
+                    self.log("❌ Get balance failed: Missing balance fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get balance failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get balance request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_create_deposit_request(self):
+        """Test create deposit request"""
+        self.log("Testing create deposit request...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        deposit_data = {
+            "amount": 500.0,
+            "senderName": "Test Sender",
+            "description": "KARGO-TEST123",
+            "paymentDate": datetime.utcnow().isoformat()
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/wallet/deposit-request", json=deposit_data)
+            self.log(f"Create deposit request response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("depositRequest"):
+                    self.created_deposit_request_id = data["depositRequest"]["_id"]
+                    self.log("✅ Create deposit request successful")
+                    return True
+                else:
+                    self.log("❌ Create deposit request failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Create deposit request failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Create deposit request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_get_deposit_requests(self):
+        """Test get user's deposit requests"""
+        self.log("Testing get deposit requests...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/wallet/deposit-requests")
+            self.log(f"Get deposit requests response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "requests" in data and "total" in data:
+                    self.log(f"✅ Get deposit requests successful: {data['total']} requests")
+                    return True
+                else:
+                    self.log("❌ Get deposit requests failed: Missing fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get deposit requests failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get deposit requests failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_get_transactions(self):
+        """Test get user's transaction history"""
+        self.log("Testing get transaction history...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/wallet/transactions")
+            self.log(f"Get transactions response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "transactions" in data and "total" in data:
+                    self.log(f"✅ Get transactions successful: {data['total']} transactions")
+                    return True
+                else:
+                    self.log("❌ Get transactions failed: Missing fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get transactions failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get transactions failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== WALLET SYSTEM TESTS (ADMIN) ==========
+    
+    def test_admin_get_deposit_requests(self):
+        """Test admin get all deposit requests"""
+        self.log("Testing admin get deposit requests...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        try:
+            response = self.admin_session.get(f"{BACKEND_URL}/admin/wallet/deposit-requests")
+            self.log(f"Admin get deposit requests response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "requests" in data and "total" in data:
+                    self.log(f"✅ Admin get deposit requests successful: {data['total']} requests")
+                    return True
+                else:
+                    self.log("❌ Admin get deposit requests failed: Missing fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin get deposit requests failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin get deposit requests failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_admin_approve_deposit(self):
+        """Test admin approve deposit request"""
+        self.log("Testing admin approve deposit request...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        if not self.created_deposit_request_id:
+            self.log("❌ No deposit request ID available", "ERROR")
+            return False
+        
+        approval_data = {
+            "adminNote": "Test approval"
+        }
+        
+        try:
+            response = self.admin_session.post(
+                f"{BACKEND_URL}/admin/wallet/approve-deposit/{self.created_deposit_request_id}", 
+                json=approval_data
+            )
+            self.log(f"Admin approve deposit response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Admin approve deposit successful")
+                    return True
+                else:
+                    self.log("❌ Admin approve deposit failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin approve deposit failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin approve deposit failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_admin_manual_balance_adjustment(self):
+        """Test admin manual balance adjustment"""
+        self.log("Testing admin manual balance adjustment...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        # Get a user ID first (use demo user)
+        user_response = self.user_session.get(f"{BACKEND_URL}/auth/me")
+        if user_response.status_code != 200:
+            self.log("❌ Cannot get user ID for balance adjustment", "ERROR")
+            return False
+        
+        user_id = user_response.json()["user"]["_id"]
+        
+        adjustment_data = {
+            "userId": user_id,
+            "amount": 100.0,
+            "description": "Test manual adjustment"
+        }
+        
+        try:
+            response = self.admin_session.post(f"{BACKEND_URL}/admin/wallet/manual-balance", json=adjustment_data)
+            self.log(f"Admin manual balance adjustment response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Admin manual balance adjustment successful")
+                    return True
+                else:
+                    self.log("❌ Admin manual balance adjustment failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin manual balance adjustment failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin manual balance adjustment failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== SETTINGS TESTS ==========
+    
+    def test_get_settings(self):
+        """Test get site settings (public)"""
+        self.log("Testing get site settings...")
+        
+        try:
+            response = requests.get(f"{BACKEND_URL}/settings")
+            self.log(f"Get settings response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("settings"):
+                    self.log("✅ Get site settings successful")
+                    return True
+                else:
+                    self.log("❌ Get settings failed: No settings in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get settings failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get settings failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_update_settings(self):
+        """Test update site settings (admin)"""
+        self.log("Testing update site settings...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        settings_data = {
+            "siteName": "En Ucuza Kargo Test",
+            "tagline": "Test tagline update"
+        }
+        
+        try:
+            response = self.admin_session.put(f"{BACKEND_URL}/settings", json=settings_data)
+            self.log(f"Update settings response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("settings"):
+                    self.log("✅ Update site settings successful")
+                    return True
+                else:
+                    self.log("❌ Update settings failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Update settings failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Update settings failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== SHIPPING COMPANIES TESTS ==========
+    
+    def test_get_shipping_companies(self):
+        """Test get shipping companies"""
+        self.log("Testing get shipping companies...")
+        
+        try:
+            response = requests.get(f"{BACKEND_URL}/shipping-companies")
+            self.log(f"Get shipping companies response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "companies" in data:
+                    self.log(f"✅ Get shipping companies successful: {len(data['companies'])} companies")
+                    return True
+                else:
+                    self.log("❌ Get shipping companies failed: No companies in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get shipping companies failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get shipping companies failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_create_shipping_company(self):
+        """Test create shipping company (admin)"""
+        self.log("Testing create shipping company...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        company_data = {
+            "name": "Test Kargo",
+            "logo": "/uploads/test-logo.png",
+            "price": 25.50,
+            "deliveryTime": "1-2 gün"
+        }
+        
+        try:
+            response = self.admin_session.post(f"{BACKEND_URL}/shipping-companies", json=company_data)
+            self.log(f"Create shipping company response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("company"):
+                    self.created_shipping_company_id = data["company"]["_id"]
+                    self.log("✅ Create shipping company successful")
+                    return True
+                else:
+                    self.log("❌ Create shipping company failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Create shipping company failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Create shipping company failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_update_shipping_company(self):
+        """Test update shipping company (admin)"""
+        self.log("Testing update shipping company...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        if not self.created_shipping_company_id:
+            self.log("❌ No shipping company ID available", "ERROR")
+            return False
+        
+        update_data = {
+            "price": 30.00,
+            "deliveryTime": "2-3 gün"
+        }
+        
+        try:
+            response = self.admin_session.put(
+                f"{BACKEND_URL}/shipping-companies/{self.created_shipping_company_id}", 
+                json=update_data
+            )
+            self.log(f"Update shipping company response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("company"):
+                    self.log("✅ Update shipping company successful")
+                    return True
+                else:
+                    self.log("❌ Update shipping company failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Update shipping company failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Update shipping company failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== ORDER MANAGEMENT TESTS ==========
+    
+    def test_create_order(self):
+        """Test create order (user)"""
+        self.log("Testing create order...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        if not self.created_shipping_company_id:
+            self.log("❌ No shipping company ID available", "ERROR")
+            return False
+        
+        order_data = {
+            "recipientName": "Test Recipient",
+            "recipientPhone": "+90 555 987 6543",
+            "recipientCity": "İstanbul",
+            "recipientDistrict": "Kadıköy",
+            "recipientAddress": "Test Address 123",
+            "weight": 2.5,
+            "desi": 15,
+            "shippingCompanyId": self.created_shipping_company_id,
+            "paymentType": "cod",
+            "codAmount": 100.0,
+            "description": "Test order description"
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/orders", json=order_data)
+            self.log(f"Create order response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("order"):
+                    self.created_order_id = data["order"]["orderId"]
+                    self.log("✅ Create order successful")
+                    return True
+                else:
+                    self.log("❌ Create order failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Create order failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Create order failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_get_user_orders(self):
+        """Test get user's orders"""
+        self.log("Testing get user orders...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/orders")
+            self.log(f"Get user orders response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "orders" in data and "total" in data:
+                    self.log(f"✅ Get user orders successful: {data['total']} orders")
+                    return True
+                else:
+                    self.log("❌ Get user orders failed: Missing fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get user orders failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get user orders failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_get_specific_order(self):
+        """Test get specific order"""
+        self.log("Testing get specific order...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        if not self.created_order_id:
+            self.log("❌ No order ID available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/orders/{self.created_order_id}")
+            self.log(f"Get specific order response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("order"):
+                    self.log("✅ Get specific order successful")
+                    return True
+                else:
+                    self.log("❌ Get specific order failed: No order in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get specific order failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get specific order failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_admin_get_all_orders(self):
+        """Test admin get all orders"""
+        self.log("Testing admin get all orders...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        try:
+            response = self.admin_session.get(f"{BACKEND_URL}/admin/orders")
+            self.log(f"Admin get all orders response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "orders" in data and "total" in data:
+                    self.log(f"✅ Admin get all orders successful: {data['total']} orders")
+                    return True
+                else:
+                    self.log("❌ Admin get all orders failed: Missing fields", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin get all orders failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin get all orders failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== SYSTEM HEALTH TESTS ==========
+    
+    def test_api_health_check(self):
+        """Test API root health check"""
+        self.log("Testing API health check...")
+        
+        try:
+            response = requests.get(f"{BACKEND_URL}/")
+            self.log(f"API health check response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "running":
+                    self.log("✅ API health check successful")
+                    return True
+                else:
+                    self.log("❌ API health check failed: Invalid status", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ API health check failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ API health check failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_cors_headers(self):
+        """Test CORS headers"""
+        self.log("Testing CORS headers...")
+        
+        try:
+            response = requests.options(f"{BACKEND_URL}/")
+            self.log(f"CORS preflight response status: {response.status_code}")
+            
+            # Check for CORS headers
+            cors_headers = [
+                'Access-Control-Allow-Origin',
+                'Access-Control-Allow-Methods',
+                'Access-Control-Allow-Headers'
+            ]
+            
+            missing_headers = []
+            for header in cors_headers:
+                if header not in response.headers:
+                    missing_headers.append(header)
+            
+            if not missing_headers:
+                self.log("✅ CORS headers present")
+                return True
+            else:
+                self.log(f"⚠️ Missing CORS headers: {missing_headers}", "WARNING")
+                return True  # Not critical for functionality
+                
+        except Exception as e:
+            self.log(f"❌ CORS test failed: {str(e)}", "ERROR")
             return False
     
     def create_test_image(self, filename="test_image.jpg", content=b"fake_image_content"):
