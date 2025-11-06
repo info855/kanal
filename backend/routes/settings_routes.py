@@ -41,31 +41,43 @@ async def update_settings(
     settings_update: SiteSettingsUpdate,
     current_user: dict = Depends(get_current_admin)
 ):
-    # Get existing settings
-    existing = await db.site_settings.find_one({})
-    
-    # Prepare update data
-    update_data = settings_update.model_dump(exclude_unset=True)
-    update_data["updatedAt"] = datetime.utcnow()
-    
-    if existing:
-        # Update existing
-        await db.site_settings.update_one(
-            {"_id": existing["_id"]},
-            {"$set": update_data}
+    try:
+        # Get existing settings
+        existing = await db.site_settings.find_one({})
+        
+        # Prepare update data
+        update_data = settings_update.model_dump(exclude_unset=True)
+        update_data["updatedAt"] = datetime.utcnow().isoformat()
+        
+        if existing:
+            # Update existing
+            await db.site_settings.update_one(
+                {"_id": existing["_id"]},
+                {"$set": update_data}
+            )
+        else:
+            # Create new
+            default_settings = SiteSettings()
+            settings_dict = default_settings.model_dump()
+            settings_dict.update(update_data)
+            settings_dict["updatedAt"] = datetime.utcnow().isoformat()
+            await db.site_settings.insert_one(settings_dict)
+        
+        # Return updated settings
+        updated = await db.site_settings.find_one({})
+        updated["_id"] = str(updated["_id"])
+        
+        # Convert datetime to string if present
+        if "updatedAt" in updated and isinstance(updated["updatedAt"], datetime):
+            updated["updatedAt"] = updated["updatedAt"].isoformat()
+        
+        return {"success": True, "settings": updated}
+    except Exception as e:
+        print(f"Error in update_settings: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ayarlar güncellenirken hata oluştu: {str(e)}"
         )
-    else:
-        # Create new
-        default_settings = SiteSettings()
-        settings_dict = default_settings.model_dump()
-        settings_dict.update(update_data)
-        await db.site_settings.insert_one(settings_dict)
-    
-    # Return updated settings
-    updated = await db.site_settings.find_one({})
-    updated["_id"] = str(updated["_id"])
-    
-    return {"success": True, "settings": updated}
 
 # Upload logo (admin only)
 @router.post("/logo", response_model=dict)
