@@ -543,15 +543,18 @@ frontend:
 
   - task: "Wallet System"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/pages/BalancePage.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Wallet system fully functional. Balance page loads correctly showing current balance (1420.04 TL), payment notification form present with all required fields (amount, sender name, reference code, date), tabs working (Bakiye Yükle, Bildirimlerim, İşlem Geçmişi)."
+      - working: "NA"
+        agent: "testing"
+        comment: "❌ NOT TESTED: Cannot access Wallet/Balance page due to authentication system failure. Wallet system requires user login which is currently not working."
 
   - task: "Admin Panel Access"
     implemented: true
