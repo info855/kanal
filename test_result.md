@@ -660,11 +660,9 @@ test_plan:
     - "Profile Settings Page (NEW FEATURE)"
     - "New Shipment - Recipient Autocomplete (NEW FEATURE)"
     - "Wallet System"
-  stuck_tasks:
-    - "Authentication System"
-    - "Admin Panel Access"
+  stuck_tasks: []
   test_all: true
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
