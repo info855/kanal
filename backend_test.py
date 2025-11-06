@@ -21,7 +21,7 @@ ADMIN_PASSWORD = "admin123"
 DEMO_USER_EMAIL = "ali@example.com"
 DEMO_USER_PASSWORD = "demo123"
 
-class MediaLibraryTester:
+class ComprehensiveBackendTester:
     def __init__(self):
         self.session = requests.Session()
         self.admin_token = None
