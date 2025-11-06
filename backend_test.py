@@ -1560,6 +1560,8 @@ class ComprehensiveBackendTester:
         categories = {
             "System Health": ["api_health", "cors_headers"],
             "Authentication": ["admin_login", "demo_user_login", "user_registration", "get_current_user"],
+            "Recipients API (NEW)": ["recipients_save", "recipients_get_all", "recipients_search", "recipients_delete"],
+            "Profile API (NEW)": ["profile_change_password", "profile_update_request", "profile_get_user_requests", "profile_admin_get_all_requests", "profile_admin_approve_request", "profile_admin_reject_request"],
             "Wallet (User)": ["wallet_balance", "create_deposit_request", "get_deposit_requests", "get_transactions"],
             "Wallet (Admin)": ["admin_get_deposit_requests", "admin_approve_deposit", "admin_manual_balance"],
             "Settings": ["get_settings", "update_settings"],
