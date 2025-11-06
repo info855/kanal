@@ -832,7 +832,7 @@ class ComprehensiveBackendTester:
                 file_handles.append(f)
                 files.append(('files', (f'test_image_{i}.jpg', f, 'image/jpeg')))
             
-            response = self.session.post(f"{BACKEND_URL}/media/upload", files=files)
+            response = self.admin_session.post(f"{BACKEND_URL}/media/upload", files=files)
             
             # Close file handles
             for f in file_handles:
