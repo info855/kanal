@@ -458,7 +458,7 @@ test_plan:
   stuck_tasks:
     - "Admin Panel Access"
     - "Chat Widget System"
-  test_all: true
+  test_all: false
   test_priority: "stuck_first"
 
 agent_communication:
