@@ -132,4 +132,12 @@ export const adminWalletAPI = {
   getUserTransactions: (userId, params) => api.get(`/admin/wallet/user-transactions/${userId}`, { params })
 };
 
+// Recipients API
+export const recipientsAPI = {
+  search: (query) => api.get('/recipients/search', { params: { q: query } }),
+  getAll: (limit = 50) => api.get('/recipients', { params: { limit } }),
+  save: (data) => api.post('/recipients/save', data),
+  delete: (id) => api.delete(`/recipients/${id}`)
+};
+
 export default api;
