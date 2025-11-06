@@ -1034,7 +1034,7 @@ class ComprehensiveBackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if data.get("success"):
+                if data.get("message"):
                     self.log("✅ Admin reject profile update request successful")
                     return True
                 else:
