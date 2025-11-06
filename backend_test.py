@@ -1019,7 +1019,7 @@ class ComprehensiveBackendTester:
                 self.log("❌ Could not create request for rejection test", "ERROR")
                 return False
             
-            request_id = create_response.json()["request"]["_id"]
+            request_id = create_response.json()["requestId"]
             
             # Now reject it
             rejection_data = {
