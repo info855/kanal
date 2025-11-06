@@ -12,7 +12,7 @@ from pathlib import Path
 import time
 
 # Configuration
-BACKEND_URL = "https://fast-cargo-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://kargohub.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@enucuzakargo.com"
 ADMIN_PASSWORD = "admin123"
 

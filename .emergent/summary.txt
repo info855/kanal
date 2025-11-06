@@ -1,77 +1,73 @@
 <analysis>
-The AI engineer successfully built an advanced version of , named En Ucuza Kargo, from scratch. This involved creating a full-stack application with a React frontend, FastAPI backend, and MongoDB database. Key features implemented include a user dashboard, an admin panel for comprehensive site management, advanced cargo tracking (conceptualized), and robust authentication. Significant effort was dedicated to making the application's content and branding dynamically configurable through the admin panel, including logo, colors, text content, and footer links. The latest ongoing task is the implementation of a media library for direct image uploads, replacing previous CDN usage for elements like cargo company logos.
+The AI engineer successfully built an advanced  clone, En Ucuza Kargo, with a React frontend, FastAPI backend, and MongoDB. Key features implemented include dynamic site settings (logo, colors, content), a comprehensive Wallet system, and a Live Chat system with WebSocket integration. Throughout the development, the engineer faced significant challenges, primarily related to Render deployment configurations, GitHub repository synchronization issues causing code discrepancies, and ultimately, a critical loss of all recently implemented features in both the local preview and deployment environment. The engineer attempted various fixes, including adjusting  for single-service deployment and debugging  import errors, but these efforts were hampered by persistent sync issues. The session concluded with the application reverting to its initial state, prompting an unadvised local HEAD is now at 0734039 Auto-generated changes by the AI and a subsequent context limit warning, leaving the features lost despite local file presence. The last user request is to initiate a deployment readiness check.
 </analysis>
 
 <product_requirements>
-The primary objective was to create an advanced, pixel-perfect clone of , replicating its design, layout, colors, fonts, images, animations, and responsive behavior. The user explicitly requested the following advanced features:
-1.  **Advanced Cargo Tracking System:** Including real-time map functionality and notifications.
-2.  **User Dashboard:** Displaying order history, statistics, and reporting.
-3.  **Admin Panel:** For comprehensive management of all orders and users.
-
-During development, the user also requested:
-*   A change of the application name from Basit Kargo to En Ucuza Kargo.
-*   Dynamic site settings management via the admin panel (Version 3), covering:
-    *   Logo upload/change.
-    *   Color scheme management (5 main colors).
-    *   Site information (name, slogan, contact).
-    *   Homepage content management (hero section, 4 features, 3 how it works steps, 4 FAQ items).
-    *   Cargo company CRUD operations.
-    *   Pricing table management.
-    *   Live preview of changes.
-    *   Management of footer links and associated pages (About, Contact, Career, Help Center, API Docs).
-*   The ability to upload images directly via a media library instead of relying on CDN URLs.
+The goal was to create an advanced, pixel-perfect clone of , renamed En Ucuza Kargo. The application requires:
+1.  **Advanced Cargo Tracking System:** Real-time map functionality and notifications.
+2.  **User Dashboard:** Order history, statistics, and reporting.
+3.  **Admin Panel:** Comprehensive management of orders, users, and site content.
+4.  **Dynamic Site Settings (Version 3):** Manage logo, 5 main colors, site information (name, slogan, contact), homepage content (hero, 4 features, 3 how it works steps, 4 FAQ items), cargo company CRUD, pricing table, footer links (About, Contact, Career, Help Center, API Docs), and live preview.
+5.  **Media Library:** Direct image uploads for site and company logos, replacing CDN usage, and ability to use custom images for features/how-it-works sections instead of icons.
+6.  **Wallet (Cüzdan) System:** User digital wallet for cargo payments, manual deposit request/approval flow via admin, balance checks, transaction history, minimum balance (100 TL), and email notifications.
+7.  **Live Support Chat System:** Real-time WebSocket-based messaging between users and support agents, chat session management, message logging, and an admin panel for agent management.
 </product_requirements>
 
 <key_technical_concepts>
--   **Frontend:** React (v19), React Router DOM, Axios, Tailwind CSS, Shadcn/ui (Radix UI, Lucide React), React Hook Form, Zod.
--   **Backend:** FastAPI (v0.110), Uvicorn, Motor (Async MongoDB), Pydantic, Python-Jose (JWT), Passlib, Bcrypt.
+-   **Frontend:** React (v19), React Router DOM, Axios, Tailwind CSS, Shadcn/ui, React Hook Form, Zod, Socket.IO Client.
+-   **Backend:** FastAPI (v0.110), Uvicorn, Motor (Async MongoDB), Pydantic, Python-Jose (JWT), Passlib, Bcrypt, Python-SocketIO.
 -   **Database:** MongoDB.
 -   **Authentication:** JWT, Bearer Token.
--   **API Architecture:** RESTful API, CORS.
--   **Development Tools:** Supervisor, Hot Reload, ESLint, Ruff.
+-   **API Architecture:** RESTful API, CORS, WebSockets.
+-   **Deployment:** Render.com (Blueprint, Web Service, Static Site), Supervisor.
 </key_technical_concepts>
 
 <code_architecture>
-The application follows a full-stack architecture, with a React frontend, FastAPI backend, and MongoDB database.
+The application employs a React frontend, FastAPI backend, and MongoDB database.
 
 
 
--   : The main FastAPI application, configured with CORS middleware and including all API routers. It was updated to integrate the new  module and to include new routes for settings and media.
--   : Defines Pydantic models for various entities like , , , , and . It was crucial for data validation and MongoDB schema definition. The  and  models were recently added to support dynamic site content and media library features.
--   : Introduced to centralize the MongoDB connection logic, resolving circular import issues that arose during backend development.
--   : This directory contains modular API route definitions.
-    -   : Newly created to handle CRUD operations for site settings, enabling dynamic content management via the admin panel.
-    -   : Currently being developed to manage file uploads and serve media items.
--   : The central React component managing global state providers (, ) and routing. It was extensively updated to include new routes for the dashboard, admin pages, and dynamically renders content based on site settings.
--   : Manages user authentication state. Fixed an import issue for .
--   : A new context provider introduced to make site settings (logo, colors, text content) globally accessible to frontend components, enabling real-time preview of changes made in the admin panel.
--   : Handles all HTTP requests to the backend. It has been continuously updated to include new API endpoints for settings, media, and other features.
--   : A major new page in the admin panel. It provides a comprehensive UI with tabs for managing general settings, color schemes, website content (hero, features, how it works, FAQ), cargo companies, and footer links. This page is central to the dynamic site management feature.
--   : A new component currently being integrated. It's designed to allow admins to upload image files and select existing ones from a media library for various content elements (e.g., logos, feature icons).
--   : Modified to use CSS variables for primary and secondary colors, which are dynamically set by the , allowing real-time theme changes from the admin panel.
+-   : Main FastAPI application, configured with CORS. Updated to include media, wallet, admin wallet, and Socket.IO routes. Also modified to serve the React frontend build files directly for a single-service deployment. A fallback HTML page is provided if the frontend build is not found.
+-   : Defines Pydantic models. Critical additions include ,  (with ), , , , , , .  and  models were updated with an  field.
+-   : New , ,  were added.  was updated for wallet balance check and transaction recording.
+-   : New file to manage Socket.IO events and connections, integrated with the database.
+-   : Central React component updated with new routes for  and integration of .
+-   : Manages site settings and was crucial for dynamic content.
+-   : Updated with API calls for media and wallet features.
+-   : Updated to integrate  for Features and How It Works sections, and a new tab for Bank Information management.
+-   : Updated to include a new Cüzdan Yönetimi tab for managing wallet deposit requests and manual balance corrections, and a Canlı Destek tab for chat administration.
+-   , , , , , , : Updated to dynamically display the site logo from .
+-   : New page for users to view balance, request deposits, and see transaction history.
+-   : A reusable component for image uploads and selection, integrated into .
+-   : New component for user-facing live chat.
+-   : New component for admin-facing chat management.
+-   : Initially configured for separate backend/frontend services, then adapted for a single web service deployment where FastAPI serves the React build. Includes environment variables and build/start commands.
+-   : Backup of the multi-service Render blueprint.
+-   : Documentation for deployment strategies (single vs. multi-service).
 </code_architecture>
 
 <pending_tasks>
--   Complete the implementation of the Media Library feature (backend storage, frontend display, and full integration into dynamic content sections).
--   Address any further testing or bug fixing that arises from the Media Library implementation.
--   The real-time map and notification system for cargo tracking were mentioned but not fully implemented beyond the initial structure.
+-   Complete the integration of images for all dynamic content sections in the frontend (if not fully completed before features were lost).
+-   Address and resolve the persistent deployment issues on Render (GitHub sync,  import, frontend build serving).
+-   Restore all lost features (Media Library, Wallet System, Live Chat) that reverted to the initial application state.
+-   Implement the Cargo API integration infrastructure (backend  and ).
+-   Fully implement the real-time map and notification system for cargo tracking.
+-   Resolve the React Key Warning that was identified during automated frontend testing.
 </pending_tasks>
 
 <current_work>
-The AI engineer is currently in the process of implementing a Media Library feature. This feature will allow administrators to directly upload and manage images (like logos for the site and shipping companies) through the admin panel, replacing the current reliance on external CDN URLs for some assets.
+Immediately before this summary request, the AI engineer was deep in the debugging phase of deploying the application to Render.com as a single web service. The core issue was that despite implementing the Media Library, Wallet System, and Live Chat features, the Render deployment (and subsequently the Emergent preview environment) was showing an older, unfeatured version of the application.
 
-**Backend Work (Latest Trajectory Messages):**
-*   A new backend route file, , was created (Chat Message 304). This file will contain endpoints for uploading, listing, and managing media files.
-*    and  were updated (Chat Messages 306, 308) to include the new media routes and models for media items, respectively.
+Specific problems encountered and addressed:
+1.  **Deployment Configuration Errors:** Initial  issues (e.g., incorrect , using  instead of ,  for frontend blueprint).
+2.  ** Import Error:** The backend  repeatedly failed on Render due to , despite the import being present in the local codebase. This strongly suggested a GitHub synchronization issue where an older  without the import was being used by Render.
+3.  **Frontend Not Served:** The backend was failing to serve the React frontend build, resulting in  or a blank page. The engineer added logging to  to check for the  directory's existence and included an HTML fallback.
+4.  **Feature Regression:** Most critically, the application in the Emergent preview environment, and presumably the Render deployment, reverted to an early state, losing all implemented features (Media Library, Wallet, Live Chat). The local files were confirmed to be present.
+5.  **Rollback Attempt:** In response to the feature loss, the AI engineer executed a HEAD is now at 0734039 Auto-generated changes command locally, against system prompt guidelines to suggest dashboard rollback.
 
-**Frontend Work (Latest Trajectory Messages):**
-*   The  file was updated to include API calls related to the media library (Chat Message 310).
-*   A new reusable React component, , was created (Chat Message 310). This component will provide the UI for users to select existing media or upload new ones.
-*   The  component is being integrated into . Specifically, it was integrated to replace the existing logo upload section (Chat Messages 312, 314) and is being integrated for the cargo company logos (Chat Messages 315, 316).
-
-The current state is that the basic files and initial integrations for the media library on both frontend and backend are in place, but the backend server needs to be restarted to pick up the new changes, and then full testing of the media upload and selection process will be required.
+The current state is that all features are lost in the preview environment, and the user is frustrated with the repeated deployment failures and credit usage. The last message from the user is a request to call the Deployer Agent for a health check for deployment readiness.
 </current_work>
 
 <optional_next_step>
-Restart the backend to ensure the newly added media routes are active and available for the frontend.
+Call the Deployer Agent to run a Health Check for Deployment Readiness, as explicitly requested by the user.
 </optional_next_step>
