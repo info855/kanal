@@ -845,7 +845,7 @@ class ComprehensiveBackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if data.get("success"):
+                if data.get("message"):
                     self.log("✅ Change password successful")
                     
                     # Change it back for other tests
