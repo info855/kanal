@@ -120,8 +120,14 @@ const ChatWidget = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-pink-600 hover:bg-pink-700"
-          style={{ zIndex: 99999 }}
+          className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg"
+          style={{ 
+            zIndex: 99999,
+            backgroundColor: '#DB2777',
+            color: 'white'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#BE185D'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#DB2777'}
         >
           <MessageCircle className="w-6 h-6" />
         </Button>
