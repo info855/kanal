@@ -118,14 +118,6 @@ const LoginPage = () => {
                 Kayıt Ol
               </Link>
             </div>
-
-            <div className="pt-4 border-t">
-              <p className="text-xs text-gray-500 text-center">
-                Demo hesaplar:<br/>
-                • ali@example.com (şifre: demo123)<br/>
-                • admin@enucuzakargo.com (şifre: admin123)
-              </p>
-            </div>
           </form>
         </CardContent>
       </Card>
