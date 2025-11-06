@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -10,6 +11,7 @@ import { Package } from 'lucide-react';
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
