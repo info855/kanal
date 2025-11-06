@@ -18,6 +18,7 @@ import AdminChatPanel from '../components/AdminChatPanel';
 const AdminPage = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { settings } = useSettings();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('overview');
   
