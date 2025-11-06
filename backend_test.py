@@ -366,12 +366,18 @@ class ComprehensiveBackendTester:
             return False
         
         # Get a user ID first (use demo user)
-        user_response = self.user_session.get(f"{BACKEND_URL}/auth/me")
-        if user_response.status_code != 200:
-            self.log("❌ Cannot get user ID for balance adjustment", "ERROR")
+        # Re-login to ensure we have a valid session
+        login_data = {
+            "email": DEMO_USER_EMAIL,
+            "password": DEMO_USER_PASSWORD
+        }
+        
+        login_response = requests.post(f"{BACKEND_URL}/auth/login", json=login_data)
+        if login_response.status_code != 200:
+            self.log("❌ Cannot login demo user for balance adjustment", "ERROR")
             return False
         
-        user_id = user_response.json()["user"]["_id"]
+        user_id = login_response.json()["user"]["_id"]
         
         adjustment_data = {
             "userId": user_id,
