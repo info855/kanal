@@ -1067,13 +1067,14 @@ class ComprehensiveBackendTester:
             self.log("❌ Upload directory does not exist", "ERROR")
             return False
     
-    def cleanup_uploaded_media(self):
-        """Clean up any remaining uploaded media"""
-        self.log("Cleaning up uploaded media...")
+    def cleanup_test_data(self):
+        """Clean up test data created during testing"""
+        self.log("Cleaning up test data...")
         
+        # Clean up uploaded media
         for media_id in self.uploaded_media_ids[:]:
             try:
-                response = self.session.delete(f"{BACKEND_URL}/media/{media_id}")
+                response = self.admin_session.delete(f"{BACKEND_URL}/media/{media_id}")
                 if response.status_code == 200:
                     self.log(f"✅ Cleaned up media: {media_id}")
                     self.uploaded_media_ids.remove(media_id)
@@ -1081,67 +1082,149 @@ class ComprehensiveBackendTester:
                     self.log(f"⚠️ Could not clean up media {media_id}: {response.status_code}")
             except Exception as e:
                 self.log(f"⚠️ Error cleaning up media {media_id}: {str(e)}")
+        
+        # Clean up shipping company
+        if self.created_shipping_company_id:
+            try:
+                response = self.admin_session.delete(f"{BACKEND_URL}/shipping-companies/{self.created_shipping_company_id}")
+                if response.status_code == 200:
+                    self.log(f"✅ Cleaned up shipping company: {self.created_shipping_company_id}")
+                else:
+                    self.log(f"⚠️ Could not clean up shipping company: {response.status_code}")
+            except Exception as e:
+                self.log(f"⚠️ Error cleaning up shipping company: {str(e)}")
     
     def run_all_tests(self):
-        """Run all media library tests"""
-        self.log("=" * 60)
-        self.log("STARTING MEDIA LIBRARY BACKEND TESTS")
-        self.log("=" * 60)
+        """Run comprehensive backend tests"""
+        self.log("=" * 80)
+        self.log("STARTING COMPREHENSIVE BACKEND TESTS FOR EN UCUZA KARGO")
+        self.log("=" * 80)
         
         test_results = {}
         
-        # Test 1: Admin Authentication
+        # ========== SYSTEM HEALTH ==========
+        self.log("\n🔍 SYSTEM HEALTH TESTS")
+        self.log("-" * 40)
+        test_results["api_health"] = self.test_api_health_check()
+        test_results["cors_headers"] = self.test_cors_headers()
+        
+        # ========== AUTHENTICATION ==========
+        self.log("\n🔐 AUTHENTICATION TESTS")
+        self.log("-" * 40)
         test_results["admin_login"] = self.test_admin_login()
+        test_results["demo_user_login"] = self.test_demo_user_login()
+        test_results["user_registration"] = self.test_user_registration()
+        test_results["get_current_user"] = self.test_get_current_user()
         
         if not test_results["admin_login"]:
             self.log("❌ Cannot proceed without admin authentication", "ERROR")
             return test_results
         
-        # Test 2: File System Integration
+        if not test_results["demo_user_login"]:
+            self.log("❌ Cannot proceed without user authentication", "ERROR")
+            return test_results
+        
+        # ========== WALLET SYSTEM (USER) ==========
+        self.log("\n💰 WALLET SYSTEM TESTS (USER)")
+        self.log("-" * 40)
+        test_results["wallet_balance"] = self.test_get_wallet_balance()
+        test_results["create_deposit_request"] = self.test_create_deposit_request()
+        test_results["get_deposit_requests"] = self.test_get_deposit_requests()
+        test_results["get_transactions"] = self.test_get_transactions()
+        
+        # ========== WALLET SYSTEM (ADMIN) ==========
+        self.log("\n👑 WALLET SYSTEM TESTS (ADMIN)")
+        self.log("-" * 40)
+        test_results["admin_get_deposit_requests"] = self.test_admin_get_deposit_requests()
+        test_results["admin_approve_deposit"] = self.test_admin_approve_deposit()
+        test_results["admin_manual_balance"] = self.test_admin_manual_balance_adjustment()
+        
+        # ========== SETTINGS ==========
+        self.log("\n⚙️ SETTINGS TESTS")
+        self.log("-" * 40)
+        test_results["get_settings"] = self.test_get_settings()
+        test_results["update_settings"] = self.test_update_settings()
+        
+        # ========== SHIPPING COMPANIES ==========
+        self.log("\n🚚 SHIPPING COMPANIES TESTS")
+        self.log("-" * 40)
+        test_results["get_shipping_companies"] = self.test_get_shipping_companies()
+        test_results["create_shipping_company"] = self.test_create_shipping_company()
+        test_results["update_shipping_company"] = self.test_update_shipping_company()
+        
+        # ========== ORDER MANAGEMENT ==========
+        self.log("\n📦 ORDER MANAGEMENT TESTS")
+        self.log("-" * 40)
+        test_results["create_order"] = self.test_create_order()
+        test_results["get_user_orders"] = self.test_get_user_orders()
+        test_results["get_specific_order"] = self.test_get_specific_order()
+        test_results["admin_get_all_orders"] = self.test_admin_get_all_orders()
+        
+        # ========== MEDIA LIBRARY ==========
+        self.log("\n🖼️ MEDIA LIBRARY TESTS")
+        self.log("-" * 40)
         test_results["filesystem"] = self.test_file_system_integration()
-        
-        # Test 3: Single Media Upload
         test_results["single_upload"] = self.test_media_upload_single()
-        
-        # Test 4: Multiple Media Upload
         test_results["multiple_upload"] = self.test_media_upload_multiple()
-        
-        # Test 5: File Validation
         test_results["file_validation"] = self.test_media_upload_validation()
-        
-        # Test 6: Media List
         test_results["media_list"] = self.test_media_list()
-        
-        # Test 7: Media Delete
         test_results["media_delete"] = self.test_media_delete()
-        
-        # Test 8: Unauthorized Access Protection
         test_results["auth_protection"] = self.test_unauthorized_access()
         
         # Cleanup
-        self.cleanup_uploaded_media()
+        self.cleanup_test_data()
         
-        # Summary
-        self.log("=" * 60)
-        self.log("TEST RESULTS SUMMARY")
-        self.log("=" * 60)
+        # ========== SUMMARY ==========
+        self.log("\n" + "=" * 80)
+        self.log("COMPREHENSIVE TEST RESULTS SUMMARY")
+        self.log("=" * 80)
         
         passed = 0
+        failed = 0
         total = len(test_results)
         
-        for test_name, result in test_results.items():
-            status = "✅ PASS" if result else "❌ FAIL"
-            self.log(f"{test_name.replace('_', ' ').title()}: {status}")
-            if result:
-                passed += 1
+        # Group results by category
+        categories = {
+            "System Health": ["api_health", "cors_headers"],
+            "Authentication": ["admin_login", "demo_user_login", "user_registration", "get_current_user"],
+            "Wallet (User)": ["wallet_balance", "create_deposit_request", "get_deposit_requests", "get_transactions"],
+            "Wallet (Admin)": ["admin_get_deposit_requests", "admin_approve_deposit", "admin_manual_balance"],
+            "Settings": ["get_settings", "update_settings"],
+            "Shipping Companies": ["get_shipping_companies", "create_shipping_company", "update_shipping_company"],
+            "Order Management": ["create_order", "get_user_orders", "get_specific_order", "admin_get_all_orders"],
+            "Media Library": ["filesystem", "single_upload", "multiple_upload", "file_validation", "media_list", "media_delete", "auth_protection"]
+        }
         
-        self.log("=" * 60)
-        self.log(f"OVERALL: {passed}/{total} tests passed")
+        for category, tests in categories.items():
+            self.log(f"\n{category}:")
+            category_passed = 0
+            category_total = 0
+            for test_name in tests:
+                if test_name in test_results:
+                    category_total += 1
+                    result = test_results[test_name]
+                    status = "✅ PASS" if result else "❌ FAIL"
+                    self.log(f"  {test_name.replace('_', ' ').title()}: {status}")
+                    if result:
+                        category_passed += 1
+                        passed += 1
+                    else:
+                        failed += 1
+            
+            if category_total > 0:
+                self.log(f"  Category Result: {category_passed}/{category_total} passed")
+        
+        self.log("\n" + "=" * 80)
+        self.log(f"OVERALL RESULT: {passed}/{total} tests passed")
         
         if passed == total:
-            self.log("🎉 ALL TESTS PASSED!")
+            self.log("🎉 ALL TESTS PASSED! Backend is fully functional.")
+        elif failed <= 2:
+            self.log(f"⚠️ {failed} minor issues found. Backend is mostly functional.")
         else:
-            self.log(f"⚠️ {total - passed} tests failed")
+            self.log(f"❌ {failed} tests failed. Backend needs attention.")
+        
+        self.log("=" * 80)
         
         return test_results
 
