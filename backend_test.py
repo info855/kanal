@@ -919,7 +919,7 @@ class ComprehensiveBackendTester:
             return False
             
         try:
-            response = self.session.get(f"{BACKEND_URL}/media")
+            response = self.admin_session.get(f"{BACKEND_URL}/media")
             self.log(f"Media list response status: {response.status_code}")
             
             if response.status_code == 200:
