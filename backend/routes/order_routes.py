@@ -139,6 +139,43 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(get
         "createdAt": datetime.utcnow()
     })
     
+    # Save recipient for future autocomplete
+    existing_recipient = await db.saved_recipients.find_one({
+        "userId": current_user["userId"],
+        "name": order_data.recipientName,
+        "phone": order_data.recipientPhone
+    })
+    
+    if existing_recipient:
+        # Update existing recipient
+        await db.saved_recipients.update_one(
+            {"_id": existing_recipient["_id"]},
+            {
+                "$set": {
+                    "city": order_data.recipientCity,
+                    "district": order_data.recipientDistrict,
+                    "address": order_data.recipientAddress,
+                    "lastUsedAt": datetime.utcnow()
+                },
+                "$inc": {"usageCount": 1}
+            }
+        )
+    else:
+        # Create new recipient
+        import uuid
+        await db.saved_recipients.insert_one({
+            "_id": str(uuid.uuid4()),
+            "userId": current_user["userId"],
+            "name": order_data.recipientName,
+            "phone": order_data.recipientPhone,
+            "city": order_data.recipientCity,
+            "district": order_data.recipientDistrict,
+            "address": order_data.recipientAddress,
+            "usageCount": 1,
+            "lastUsedAt": datetime.utcnow(),
+            "createdAt": datetime.utcnow()
+        })
+    
     return {
         "success": True,
         "order": order_dict
