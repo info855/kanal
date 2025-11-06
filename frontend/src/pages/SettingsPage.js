@@ -30,33 +30,148 @@ const SettingsPage = () => {
   const [emailUpdate, setEmailUpdate] = useState('');
   const [phoneUpdate, setPhoneUpdate] = useState('');
 
-  const handleBalanceUpdate = async (e) => {
+  useEffect(() => {
+    fetchUpdateRequests();
+  }, []);
+  
+  const fetchUpdateRequests = async () => {
+    try {
+      const response = await profileAPI.getUpdateRequests();
+      setUpdateRequests(response.data.requests || []);
+    } catch (error) {
+      console.error('Error fetching update requests:', error);
+    }
+  };
+  
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
-    if (!balanceAmount || parseFloat(balanceAmount) <= 0) {
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast({
         title: 'Hata',
-        description: 'Geçerli bir tutar girin',
+        description: 'Yeni şifreler eşleşmiyor',
         variant: 'destructive'
       });
       return;
     }
-
+    
+    if (passwordData.newPassword.length < 6) {
+      toast({
+        title: 'Hata',
+        description: 'Şifre en az 6 karakter olmalıdır',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
     setLoading(true);
     try {
-      await updateBalance(parseFloat(balanceAmount));
+      await profileAPI.changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      });
+      
       toast({
         title: 'Başarılı',
-        description: `${balanceAmount} TL bakiye yüklendi`
+        description: 'Şifreniz başarıyla değiştirildi'
       });
-      setBalanceAmount('');
+      
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
     } catch (error) {
       toast({
         title: 'Hata',
-        description: 'Bakiye yüklenemedi',
+        description: error.response?.data?.detail || 'Şifre değiştirilemedi',
         variant: 'destructive'
       });
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const handleEmailUpdateRequest = async () => {
+    if (!emailUpdate || !emailUpdate.includes('@')) {
+      toast({
+        title: 'Hata',
+        description: 'Geçerli bir email adresi girin',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await profileAPI.createUpdateRequest({
+        updateType: 'email',
+        newValue: emailUpdate
+      });
+      
+      toast({
+        title: 'Başarılı',
+        description: 'Email güncelleme talebiniz oluşturuldu. Admin onayı bekleniyor.'
+      });
+      
+      setEmailUpdate('');
+      fetchUpdateRequests();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Talep oluşturulamadı',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handlePhoneUpdateRequest = async () => {
+    if (!phoneUpdate || phoneUpdate.length < 10) {
+      toast({
+        title: 'Hata',
+        description: 'Geçerli bir telefon numarası girin',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await profileAPI.createUpdateRequest({
+        updateType: 'phone',
+        newValue: phoneUpdate
+      });
+      
+      toast({
+        title: 'Başarılı',
+        description: 'Telefon güncelleme talebiniz oluşturuldu. Admin onayı bekleniyor.'
+      });
+      
+      setPhoneUpdate('');
+      fetchUpdateRequests();
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error.response?.data?.detail || 'Talep oluşturulamadı',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'pending':
+        return <Badge variant="warning" className="bg-yellow-500"><Clock className="w-3 h-3 mr-1" />Beklemede</Badge>;
+      case 'approved':
+        return <Badge variant="success" className="bg-green-500"><CheckCircle className="w-3 h-3 mr-1" />Onaylandı</Badge>;
+      case 'rejected':
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" />Reddedildi</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
     }
   };
 
