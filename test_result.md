@@ -558,11 +558,11 @@ frontend:
 
   - task: "Admin Panel Access"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/pages/AdminPage.js"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "testing"
@@ -570,6 +570,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ FIXED & TESTED: Admin panel access now working correctly. Admin login successful (admin@enucuzakargo.com/admin123), redirects to /admin properly. All admin tabs functional: Genel Bakış, Tüm Siparişler, Kullanıcılar, Cüzdan Yönetimi, Canlı Destek, Site Ayarları. Admin dashboard displays statistics (1247 orders, 342 active orders, 125,430.5 TL revenue, 2 users). Navigation between tabs working smoothly."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL DEPLOYMENT BLOCKER: Admin login failing again. Admin credentials (admin@enucuzakargo.com/admin123) not working. Cannot access admin panel, admin settings, profile requests management, or any admin functionality. This is a critical issue that prevents admin access and must be resolved before deployment."
 
   - task: "Chat Widget System"
     implemented: true
