@@ -70,7 +70,7 @@ async def save_recipient(
     try:
         # Aynı isim, telefon ve adrese sahip alıcı var mı kontrol et
         existing = await db.saved_recipients.find_one({
-            "userId": current_user["_id"],
+            "userId": current_user["userId"],
             "name": recipient_data["name"],
             "phone": recipient_data["phone"]
         })
