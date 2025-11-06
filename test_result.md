@@ -504,15 +504,42 @@ frontend:
 
   - task: "User Dashboard"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/pages/DashboardPage.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: User dashboard working correctly. Balance card displays, navigation functional. Minor: React key prop warning in console but doesn't affect functionality."
+      - working: "NA"
+        agent: "testing"
+        comment: "❌ NOT TESTED: Cannot access user dashboard due to authentication system failure. Demo user login (ali@example.com/demo123) not working, preventing dashboard access and testing."
+
+  - task: "Profile Settings Page (NEW FEATURE)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SettingsPage.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "❌ NOT TESTED: Cannot access Settings page due to authentication system failure. Profile settings with 3 tabs (Şifre Değiştir, İletişim Bilgileri, Taleplerim) requires user login which is currently not working."
+
+  - task: "New Shipment - Recipient Autocomplete (NEW FEATURE)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/NewShipmentPage.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "❌ NOT TESTED: Cannot access New Shipment page due to authentication system failure. Recipient autocomplete feature requires user login which is currently not working."
 
   - task: "Wallet System"
     implemented: true
