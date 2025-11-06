@@ -698,6 +698,19 @@ const AdminPage = () => {
               </Card>
             </div>
           </TabsContent>
+          
+          {/* Profile Update Requests Tab */}
+          <TabsContent value="profile-requests">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profil Güncelleme Talepleri</CardTitle>
+                <CardDescription>Kullanıcıların email ve telefon güncelleme taleplerini yönetin</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">Profil güncelleme yönetimi yakında eklenecek...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
