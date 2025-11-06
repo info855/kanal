@@ -45,9 +45,13 @@ const RegisterPage = () => {
       <Card className="w-full max-w-2xl">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center">
-              <Package className="w-6 h-6 text-white" />
-            </div>
+            {settings?.logo ? (
+              <img src={settings.logo} alt={settings.siteName || 'Logo'} className="h-12 w-auto" />
+            ) : (
+              <div className="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center">
+                <Package className="w-6 h-6 text-white" />
+              </div>
+            )}
           </div>
           <CardTitle className="text-2xl font-bold">Hesap Oluştur</CardTitle>
           <CardDescription>Ücretsiz hesabınızı oluşturun ve hemen başlayın</CardDescription>
