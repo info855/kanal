@@ -22,7 +22,8 @@ from routes import (
     settings_routes, 
     media_routes, 
     wallet_routes, 
-    admin_wallet_routes
+    admin_wallet_routes,
+    recipient_routes
 )
 
 # Import socket manager
