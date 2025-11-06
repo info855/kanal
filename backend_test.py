@@ -23,9 +23,14 @@ DEMO_USER_PASSWORD = "demo123"
 
 class ComprehensiveBackendTester:
     def __init__(self):
-        self.session = requests.Session()
+        self.admin_session = requests.Session()
+        self.user_session = requests.Session()
         self.admin_token = None
+        self.user_token = None
         self.uploaded_media_ids = []
+        self.created_shipping_company_id = None
+        self.created_order_id = None
+        self.created_deposit_request_id = None
         
     def log(self, message, level="INFO"):
         """Log test messages"""
