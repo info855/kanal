@@ -218,7 +218,7 @@ async def get_user_transactions(
         transaction["_id"] = str(transaction["_id"])
     
     # Get user info
-    user = await db.users.find_one({"_id": user_id})
+    user = await db.users.find_one({"_id": ObjectId(user_id)})
     
     return {
         "transactions": transactions,
