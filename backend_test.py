@@ -935,7 +935,7 @@ class ComprehensiveBackendTester:
                 
                 # Test pagination
                 if data['total'] > 0:
-                    response_page2 = self.session.get(f"{BACKEND_URL}/media?page=2&limit=1")
+                    response_page2 = self.admin_session.get(f"{BACKEND_URL}/media?page=2&limit=1")
                     if response_page2.status_code == 200:
                         self.log("✅ Pagination working")
                     else:
