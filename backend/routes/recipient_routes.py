@@ -18,7 +18,7 @@ async def search_recipients(
     try:
         # Kullanıcının alıcılarını isim ile ara
         recipients = await db.saved_recipients.find({
-            "userId": current_user["_id"],
+            "userId": current_user["userId"],
             "name": {"$regex": q, "$options": "i"}
         }).sort("usageCount", -1).limit(10).to_list(length=10)
         
