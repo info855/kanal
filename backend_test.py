@@ -1479,6 +1479,24 @@ class ComprehensiveBackendTester:
             self.log("❌ Cannot proceed without user authentication", "ERROR")
             return test_results
         
+        # ========== RECIPIENTS API TESTS (NEW) ==========
+        self.log("\n📋 RECIPIENTS API TESTS (NEW)")
+        self.log("-" * 40)
+        test_results["recipients_save"] = self.test_recipients_save()
+        test_results["recipients_get_all"] = self.test_recipients_get_all()
+        test_results["recipients_search"] = self.test_recipients_search()
+        test_results["recipients_delete"] = self.test_recipients_delete()
+        
+        # ========== PROFILE API TESTS (NEW) ==========
+        self.log("\n👤 PROFILE API TESTS (NEW)")
+        self.log("-" * 40)
+        test_results["profile_change_password"] = self.test_profile_change_password()
+        test_results["profile_update_request"] = self.test_profile_update_request()
+        test_results["profile_get_user_requests"] = self.test_profile_get_user_requests()
+        test_results["profile_admin_get_all_requests"] = self.test_profile_admin_get_all_requests()
+        test_results["profile_admin_approve_request"] = self.test_profile_admin_approve_request()
+        test_results["profile_admin_reject_request"] = self.test_profile_admin_reject_request()
+        
         # ========== WALLET SYSTEM (USER) ==========
         self.log("\n💰 WALLET SYSTEM TESTS (USER)")
         self.log("-" * 40)
