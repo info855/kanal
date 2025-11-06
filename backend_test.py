@@ -893,7 +893,7 @@ class ComprehensiveBackendTester:
         
         update_data = {
             "updateType": "email",
-            "newValue": "newemail@example.com"
+            "newValue": f"newemail_{int(time.time())}@example.com"
         }
         
         try:
