@@ -892,8 +892,8 @@ class ComprehensiveBackendTester:
             return False
         
         update_data = {
-            "updateType": "email",
-            "newValue": f"newemail_{int(time.time())}@example.com"
+            "updateType": "phone",
+            "newValue": f"+90 555 {int(time.time()) % 10000:04d} 99 88"
         }
         
         try:
