@@ -40,6 +40,18 @@ const NewShipmentPage = () => {
     fetchShippingCompanies();
   }, []);
 
+  // Close autocomplete when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
+        setShowAutocomplete(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const fetchShippingCompanies = async () => {
     try {
       const response = await shippingAPI.getAll();
@@ -52,6 +64,46 @@ const NewShipmentPage = () => {
         variant: 'destructive'
       });
     }
+  };
+  
+  // Search recipients
+  const searchRecipients = async (query) => {
+    if (query.length < 2) {
+      setSearchResults([]);
+      setShowAutocomplete(false);
+      return;
+    }
+    
+    try {
+      const response = await recipientsAPI.search(query);
+      setSearchResults(response.data.recipients || []);
+      setShowAutocomplete(true);
+    } catch (error) {
+      console.error('Error searching recipients:', error);
+    }
+  };
+  
+  // Handle recipient name change
+  const handleRecipientNameChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setFormData({ ...formData, recipientName: value });
+    searchRecipients(value);
+  };
+  
+  // Select recipient from autocomplete
+  const selectRecipient = (recipient) => {
+    setFormData({
+      ...formData,
+      recipientName: recipient.name,
+      recipientPhone: recipient.phone,
+      recipientCity: recipient.city,
+      recipientDistrict: recipient.district,
+      recipientAddress: recipient.address
+    });
+    setSearchQuery(recipient.name);
+    setShowAutocomplete(false);
+    setSearchResults([]);
   };
 
   const handleChange = (e) => {
