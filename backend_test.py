@@ -695,6 +695,359 @@ class ComprehensiveBackendTester:
             self.log(f"❌ Admin get all orders failed: {str(e)}", "ERROR")
             return False
     
+    # ========== RECIPIENTS API TESTS (NEW) ==========
+    
+    def test_recipients_save(self):
+        """Test save recipient"""
+        self.log("Testing save recipient...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        recipient_data = {
+            "name": "Test Recipient",
+            "phone": "+90 555 123 4567",
+            "city": "İstanbul",
+            "district": "Kadıköy",
+            "address": "Test Address 123"
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/recipients/save", json=recipient_data)
+            self.log(f"Save recipient response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("recipient"):
+                    self.saved_recipient_id = data["recipient"]["_id"]
+                    self.log("✅ Save recipient successful")
+                    return True
+                else:
+                    self.log("❌ Save recipient failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Save recipient failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Save recipient failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_recipients_get_all(self):
+        """Test get all recipients"""
+        self.log("Testing get all recipients...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/recipients")
+            self.log(f"Get recipients response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "recipients" in data:
+                    self.log(f"✅ Get recipients successful: {len(data['recipients'])} recipients")
+                    return True
+                else:
+                    self.log("❌ Get recipients failed: No recipients in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get recipients failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get recipients failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_recipients_search(self):
+        """Test search recipients"""
+        self.log("Testing search recipients...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/recipients/search?q=Test")
+            self.log(f"Search recipients response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "recipients" in data:
+                    self.log(f"✅ Search recipients successful: {len(data['recipients'])} results")
+                    return True
+                else:
+                    self.log("❌ Search recipients failed: No recipients in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Search recipients failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Search recipients failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_recipients_delete(self):
+        """Test delete recipient"""
+        self.log("Testing delete recipient...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        if not hasattr(self, 'saved_recipient_id') or not self.saved_recipient_id:
+            self.log("❌ No recipient ID available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.delete(f"{BACKEND_URL}/recipients/{self.saved_recipient_id}")
+            self.log(f"Delete recipient response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Delete recipient successful")
+                    return True
+                else:
+                    self.log("❌ Delete recipient failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Delete recipient failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Delete recipient failed: {str(e)}", "ERROR")
+            return False
+    
+    # ========== PROFILE API TESTS (NEW) ==========
+    
+    def test_profile_change_password(self):
+        """Test change password"""
+        self.log("Testing change password...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        password_data = {
+            "currentPassword": DEMO_USER_PASSWORD,
+            "newPassword": "newdemo123"
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/profile/change-password", json=password_data)
+            self.log(f"Change password response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Change password successful")
+                    
+                    # Change it back for other tests
+                    revert_data = {
+                        "currentPassword": "newdemo123",
+                        "newPassword": DEMO_USER_PASSWORD
+                    }
+                    revert_response = self.user_session.post(f"{BACKEND_URL}/profile/change-password", json=revert_data)
+                    if revert_response.status_code == 200:
+                        self.log("✅ Password reverted successfully")
+                    
+                    return True
+                else:
+                    self.log("❌ Change password failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Change password failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Change password failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_profile_update_request(self):
+        """Test create profile update request"""
+        self.log("Testing create profile update request...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        update_data = {
+            "type": "email",
+            "newValue": "newemail@example.com",
+            "reason": "Test email update request"
+        }
+        
+        try:
+            response = self.user_session.post(f"{BACKEND_URL}/profile/update-request", json=update_data)
+            self.log(f"Create update request response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("request"):
+                    self.profile_update_request_id = data["request"]["_id"]
+                    self.log("✅ Create profile update request successful")
+                    return True
+                else:
+                    self.log("❌ Create update request failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Create update request failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Create update request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_profile_get_user_requests(self):
+        """Test get user's profile update requests"""
+        self.log("Testing get user profile update requests...")
+        
+        if not self.user_token:
+            self.log("❌ No user token available", "ERROR")
+            return False
+        
+        try:
+            response = self.user_session.get(f"{BACKEND_URL}/profile/update-requests")
+            self.log(f"Get user requests response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "requests" in data:
+                    self.log(f"✅ Get user requests successful: {len(data['requests'])} requests")
+                    return True
+                else:
+                    self.log("❌ Get user requests failed: No requests in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get user requests failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Get user requests failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_profile_admin_get_all_requests(self):
+        """Test admin get all profile update requests"""
+        self.log("Testing admin get all profile update requests...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        try:
+            response = self.admin_session.get(f"{BACKEND_URL}/profile/admin/update-requests")
+            self.log(f"Admin get all requests response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "requests" in data:
+                    self.log(f"✅ Admin get all requests successful: {len(data['requests'])} requests")
+                    return True
+                else:
+                    self.log("❌ Admin get all requests failed: No requests in response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin get all requests failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin get all requests failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_profile_admin_approve_request(self):
+        """Test admin approve profile update request"""
+        self.log("Testing admin approve profile update request...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        if not hasattr(self, 'profile_update_request_id') or not self.profile_update_request_id:
+            self.log("❌ No profile update request ID available", "ERROR")
+            return False
+        
+        approval_data = {
+            "adminNote": "Test approval"
+        }
+        
+        try:
+            response = self.admin_session.post(
+                f"{BACKEND_URL}/profile/admin/approve-request/{self.profile_update_request_id}", 
+                json=approval_data
+            )
+            self.log(f"Admin approve request response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Admin approve profile update request successful")
+                    return True
+                else:
+                    self.log("❌ Admin approve request failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin approve request failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin approve request failed: {str(e)}", "ERROR")
+            return False
+    
+    def test_profile_admin_reject_request(self):
+        """Test admin reject profile update request"""
+        self.log("Testing admin reject profile update request...")
+        
+        if not self.admin_token:
+            self.log("❌ No admin token available", "ERROR")
+            return False
+        
+        # Create another request to reject
+        update_data = {
+            "type": "phone",
+            "newValue": "+90 555 999 8888",
+            "reason": "Test phone update for rejection"
+        }
+        
+        try:
+            # First create a request
+            create_response = self.user_session.post(f"{BACKEND_URL}/profile/update-request", json=update_data)
+            if create_response.status_code != 200:
+                self.log("❌ Could not create request for rejection test", "ERROR")
+                return False
+            
+            request_id = create_response.json()["request"]["_id"]
+            
+            # Now reject it
+            rejection_data = {
+                "adminNote": "Test rejection"
+            }
+            
+            response = self.admin_session.post(
+                f"{BACKEND_URL}/profile/admin/reject-request/{request_id}", 
+                json=rejection_data
+            )
+            self.log(f"Admin reject request response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log("✅ Admin reject profile update request successful")
+                    return True
+                else:
+                    self.log("❌ Admin reject request failed: Invalid response", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin reject request failed with status {response.status_code}: {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin reject request failed: {str(e)}", "ERROR")
+            return False
+
     # ========== SYSTEM HEALTH TESTS ==========
     
     def test_api_health_check(self):
