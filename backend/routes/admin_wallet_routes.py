@@ -57,7 +57,6 @@ async def approve_deposit_request(
         )
     
     # Get user
-    from bson import ObjectId
     user = await db.users.find_one({"_id": ObjectId(deposit_request["userId"])})
     if not user:
         raise HTTPException(
