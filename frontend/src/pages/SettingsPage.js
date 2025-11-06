@@ -8,7 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Badge } from '../components/ui/badge';
-import { ArrowLeft, Settings, Lock, Mail, Phone, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { ArrowLeft, Lock, Mail, Phone, CheckCircle, XCircle, Clock, User } from 'lucide-react';
 import { profileAPI } from '../services/api';
 import { toast } from '../hooks/use-toast';
 
@@ -186,120 +186,217 @@ const SettingsPage = () => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center space-x-2">
-                <Settings className="w-8 h-8 text-pink-600" />
-                <span className="text-2xl font-bold text-gray-900">Ayarlar</span>
+                {siteSettings?.logo ? (
+                  <img src={siteSettings.logo} alt={siteSettings.siteName || 'Logo'} className="h-8 w-auto" />
+                ) : (
+                  <User className="w-8 h-8 text-pink-600" />
+                )}
+                <span className="text-2xl font-bold text-gray-900">Profil Ayarları</span>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Profile Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Profil Bilgileri</CardTitle>
-              <CardDescription>Hesap bilgileriniz</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Ad Soyad</Label>
-                <p className="mt-1 text-sm text-gray-700">{user?.name}</p>
-              </div>
-              <div>
-                <Label>Email</Label>
-                <p className="mt-1 text-sm text-gray-700">{user?.email}</p>
-              </div>
-              <div>
-                <Label>Telefon</Label>
-                <p className="mt-1 text-sm text-gray-700">{user?.phone}</p>
-              </div>
-              <div>
-                <Label>Şirket</Label>
-                <p className="mt-1 text-sm text-gray-700">{user?.company}</p>
-              </div>
-              <div>
-                <Label>Vergi No</Label>
-                <p className="mt-1 text-sm text-gray-700">{user?.taxId}</p>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <Tabs defaultValue="password" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="password">Şifre Değiştir</TabsTrigger>
+            <TabsTrigger value="contact">İletişim Bilgileri</TabsTrigger>
+            <TabsTrigger value="requests">Taleplerim</TabsTrigger>
+          </TabsList>
 
-          {/* Balance */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Bakiye Yönetimi</CardTitle>
-              <CardDescription>Hesabınıza bakiye yükleyin</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Mevcut Bakiye</p>
-                    <p className="text-2xl font-bold text-green-600">{user?.balance?.toFixed(2)} TL</p>
+          {/* Password Change Tab */}
+          <TabsContent value="password">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Lock className="w-5 h-5 mr-2" />
+                  Şifre Değiştir
+                </CardTitle>
+                <CardDescription>Hesap güvenliğiniz için güçlü bir şifre kullanın</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handlePasswordChange} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Mevcut Şifre</Label>
+                    <Input
+                      type="password"
+                      value={passwordData.currentPassword}
+                      onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                      required
+                    />
                   </div>
-                  <CreditCard className="w-8 h-8 text-green-600" />
-                </div>
-              </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Yeni Şifre</Label>
+                    <Input
+                      type="password"
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                      required
+                      minLength={6}
+                    />
+                    <p className="text-xs text-gray-500">En az 6 karakter olmalıdır</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Yeni Şifre (Tekrar)</Label>
+                    <Input
+                      type="password"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                      required
+                    />
+                  </div>
+                  
+                  <Button type="submit" disabled={loading} className="bg-pink-600 hover:bg-pink-700">
+                    {loading ? 'Kaydediliyor...' : 'Şifreyi Değiştir'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              <form onSubmit={handleBalanceUpdate} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="amount">Yüklenecek Tutar</Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
-                    value={balanceAmount}
-                    onChange={(e) => setBalanceAmount(e.target.value)}
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-pink-600 hover:bg-pink-700"
-                  disabled={loading}
-                >
-                  {loading ? 'Yükleniyor...' : 'Bakiye Yükle'}
-                </Button>
-              </form>
+          {/* Contact Info Tab */}
+          <TabsContent value="contact">
+            <div className="space-y-6">
+              {/* Current Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Mevcut Bilgiler</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Mail className="w-5 h-5 text-gray-500" />
+                      <div>
+                        <p className="text-sm text-gray-500">Email</p>
+                        <p className="font-medium">{user?.email || 'Belirtilmemiş'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Phone className="w-5 h-5 text-gray-500" />
+                      <div>
+                        <p className="text-sm text-gray-500">Telefon</p>
+                        <p className="font-medium">{user?.phone || 'Belirtilmemiş'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Email Update */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Email Güncelleme
+                  </CardTitle>
+                  <CardDescription>Email değişikliği admin onayı gerektirir</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Yeni Email Adresi</Label>
+                    <Input
+                      type="email"
+                      value={emailUpdate}
+                      onChange={(e) => setEmailUpdate(e.target.value)}
+                      placeholder="yeni@email.com"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleEmailUpdateRequest} 
+                    disabled={loading}
+                    className="bg-pink-600 hover:bg-pink-700"
+                  >
+                    {loading ? 'Gönderiliyor...' : 'Güncelleme Talebi Gönder'}
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              {/* Phone Update */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Phone className="w-5 h-5 mr-2" />
+                    Telefon Güncelleme
+                  </CardTitle>
+                  <CardDescription>Telefon değişikliği admin onayı gerektirir</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Yeni Telefon Numarası</Label>
+                    <Input
+                      type="tel"
+                      value={phoneUpdate}
+                      onChange={(e) => setPhoneUpdate(e.target.value)}
+                      placeholder="05XX XXX XX XX"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handlePhoneUpdateRequest} 
+                    disabled={loading}
+                    className="bg-pink-600 hover:bg-pink-700"
+                  >
+                    {loading ? 'Gönderiliyor...' : 'Güncelleme Talebi Gönder'}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              <div className="pt-4 border-t">
-                <p className="text-xs text-gray-500">
-                  * Bakiye yükleme işlemi demo amaçlıdır. Gerçek ödeme entegrasyonu eklenmemiştir.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Statistics */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>İstatistikler</CardTitle>
-              <CardDescription>Hesap aktiviteleriniz</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-gray-600">Toplam Gönderi</p>
-                  <p className="text-3xl font-bold text-blue-600 mt-2">{user?.totalShipments || 0}</p>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <p className="text-sm text-gray-600">Üyelik Tarihi</p>
-                  <p className="text-lg font-bold text-purple-600 mt-2">
-                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('tr-TR') : '-'}
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-pink-50 rounded-lg">
-                  <p className="text-sm text-gray-600">Hesap Tipi</p>
-                  <p className="text-lg font-bold text-pink-600 mt-2">
-                    {user?.role === 'admin' ? 'Yönetici' : 'Kullanıcı'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Update Requests Tab */}
+          <TabsContent value="requests">
+            <Card>
+              <CardHeader>
+                <CardTitle>Güncelleme Taleplerim</CardTitle>
+                <CardDescription>Email ve telefon güncelleme taleplerinizin durumu</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {updateRequests.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>Henüz güncelleme talebiniz bulunmuyor</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {updateRequests.map((request) => (
+                      <div key={request._id} className="border rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            {request.updateType === 'email' ? (
+                              <Mail className="w-4 h-4 text-gray-500" />
+                            ) : (
+                              <Phone className="w-4 h-4 text-gray-500" />
+                            )}
+                            <span className="font-medium capitalize">{request.updateType === 'email' ? 'Email' : 'Telefon'} Güncelleme</span>
+                          </div>
+                          {getStatusBadge(request.status)}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          <p><span className="font-medium">Mevcut:</span> {request.currentValue}</p>
+                          <p><span className="font-medium">Yeni:</span> {request.newValue}</p>
+                        </div>
+                        {request.adminNote && (
+                          <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                            <p className="font-medium text-gray-700">Admin Notu:</p>
+                            <p className="text-gray-600">{request.adminNote}</p>
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-400">
+                          {new Date(request.createdAt).toLocaleString('tr-TR')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
