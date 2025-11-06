@@ -31,6 +31,8 @@ class ComprehensiveBackendTester:
         self.created_shipping_company_id = None
         self.created_order_id = None
         self.created_deposit_request_id = None
+        self.saved_recipient_id = None
+        self.profile_update_request_id = None
         
     def log(self, message, level="INFO"):
         """Log test messages"""
