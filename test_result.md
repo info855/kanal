@@ -636,13 +636,17 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Authentication System"
     - "Admin Panel Access"
-    - "Chat Widget System"
-    - "Wallet System Frontend"
-    - "Media Library Integration"
-  stuck_tasks: []
+    - "User Dashboard"
+    - "Profile Settings Page (NEW FEATURE)"
+    - "New Shipment - Recipient Autocomplete (NEW FEATURE)"
+    - "Wallet System"
+  stuck_tasks:
+    - "Authentication System"
+    - "Admin Panel Access"
   test_all: true
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
