@@ -126,7 +126,7 @@ async def delete_recipient(
     try:
         result = await db.saved_recipients.delete_one({
             "_id": recipient_id,
-            "userId": current_user["_id"]
+            "userId": current_user["userId"]
         })
         
         if result.deleted_count == 0:
