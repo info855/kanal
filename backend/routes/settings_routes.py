@@ -14,15 +14,26 @@ from database import db
 # Get site settings (public)
 @router.get("", response_model=dict)
 async def get_settings():
-    settings = await db.site_settings.find_one({})
-    
-    if not settings:
-        # Return default settings
+    try:
+        settings = await db.site_settings.find_one({})
+        
+        if not settings:
+            # Return default settings
+            default_settings = SiteSettings()
+            return {"settings": default_settings.model_dump()}
+        
+        settings["_id"] = str(settings["_id"])
+        
+        # Convert datetime objects to strings if present
+        if "updatedAt" in settings and isinstance(settings["updatedAt"], datetime):
+            settings["updatedAt"] = settings["updatedAt"].isoformat()
+        
+        return {"settings": settings}
+    except Exception as e:
+        print(f"Error in get_settings: {str(e)}")
+        # Return default settings on error
         default_settings = SiteSettings()
         return {"settings": default_settings.model_dump()}
-    
-    settings["_id"] = str(settings["_id"])
-    return {"settings": settings}
 
 # Update site settings (admin only)
 @router.put("", response_model=dict)
