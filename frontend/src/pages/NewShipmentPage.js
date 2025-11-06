@@ -175,16 +175,51 @@ const NewShipmentPage = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="recipientName">Ad Soyad *</Label>
-                      <Input
-                        id="recipientName"
-                        name="recipientName"
-                        value={formData.recipientName}
-                        onChange={handleChange}
-                        placeholder="Alıcı adı soyadı"
-                        required
-                      />
+                    <div className="space-y-2 relative" ref={autocompleteRef}>
+                      <Label htmlFor="recipientName">Ad Soyad * <span className="text-xs text-gray-500">(Kayıtlı alıcı aramak için yazın)</span></Label>
+                      <div className="relative">
+                        <Input
+                          id="recipientName"
+                          name="recipientName"
+                          value={formData.recipientName}
+                          onChange={handleRecipientNameChange}
+                          placeholder="Alıcı adı soyadı"
+                          required
+                          autoComplete="off"
+                        />
+                        {searchQuery && searchQuery.length >= 2 && (
+                          <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                        )}
+                      </div>
+                      
+                      {/* Autocomplete Dropdown */}
+                      {showAutocomplete && searchResults.length > 0 && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                          {searchResults.map((recipient) => (
+                            <button
+                              key={recipient._id}
+                              type="button"
+                              onClick={() => selectRecipient(recipient)}
+                              className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0 focus:outline-none focus:bg-gray-50"
+                            >
+                              <div className="font-medium text-gray-900">{recipient.name}</div>
+                              <div className="text-sm text-gray-500">{recipient.phone}</div>
+                              <div className="text-xs text-gray-400 mt-1">
+                                {recipient.city} / {recipient.district}
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                Kullanım: {recipient.usageCount} kez
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {showAutocomplete && searchQuery.length >= 2 && searchResults.length === 0 && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+                          <p className="text-sm text-gray-500 text-center">Kayıtlı alıcı bulunamadı</p>
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="recipientPhone">Telefon *</Label>
