@@ -745,7 +745,7 @@ class ComprehensiveBackendTester:
             return False
         
         try:
-            response = self.user_session.get(f"{BACKEND_URL}/recipients")
+            response = self.user_session.get(f"{BACKEND_URL}/recipients/")
             self.log(f"Get recipients response status: {response.status_code}")
             
             if response.status_code == 200:
