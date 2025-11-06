@@ -140,4 +140,15 @@ export const recipientsAPI = {
   delete: (id) => api.delete(`/recipients/${id}`)
 };
 
+// Profile API
+export const profileAPI = {
+  changePassword: (data) => api.post('/profile/change-password', data),
+  createUpdateRequest: (data) => api.post('/profile/update-request', data),
+  getUpdateRequests: () => api.get('/profile/update-requests'),
+  // Admin endpoints
+  getAllUpdateRequests: (status) => api.get('/profile/admin/update-requests', { params: { status_filter: status } }),
+  approveRequest: (requestId, data) => api.post(`/profile/admin/approve-request/${requestId}`, data),
+  rejectRequest: (requestId, data) => api.post(`/profile/admin/reject-request/${requestId}`, data)
+};
+
 export default api;
