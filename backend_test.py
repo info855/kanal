@@ -878,9 +878,8 @@ class ComprehensiveBackendTester:
             return False
         
         update_data = {
-            "type": "email",
-            "newValue": "newemail@example.com",
-            "reason": "Test email update request"
+            "updateType": "email",
+            "newValue": "newemail@example.com"
         }
         
         try:
@@ -889,8 +888,8 @@ class ComprehensiveBackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if data.get("success") and data.get("request"):
-                    self.profile_update_request_id = data["request"]["_id"]
+                if data.get("message") and data.get("requestId"):
+                    self.profile_update_request_id = data["requestId"]
                     self.log("✅ Create profile update request successful")
                     return True
                 else:
