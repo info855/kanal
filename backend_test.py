@@ -836,33 +836,41 @@ class ComprehensiveBackendTester:
         """Test change password"""
         self.log("Testing change password...")
         
-        if not self.user_token:
-            self.log("❌ No user token available", "ERROR")
-            return False
-        
-        password_data = {
-            "currentPassword": DEMO_USER_PASSWORD,
-            "newPassword": "newdemo123"
+        # Create a temporary user for password testing
+        temp_email = f"temp_password_test_{int(time.time())}@example.com"
+        register_data = {
+            "name": "Temp Password Test User",
+            "email": temp_email,
+            "phone": "+90 555 999 8888",
+            "company": "Test Company",
+            "taxId": "9999999999",
+            "password": "temppass123"
         }
         
         try:
-            response = self.user_session.post(f"{BACKEND_URL}/profile/change-password", json=password_data)
+            # Register temp user
+            register_response = requests.post(f"{BACKEND_URL}/auth/register", json=register_data)
+            if register_response.status_code != 200:
+                self.log("❌ Could not create temp user for password test", "ERROR")
+                return False
+            
+            temp_token = register_response.json()["token"]
+            temp_session = requests.Session()
+            temp_session.headers.update({"Authorization": f"Bearer {temp_token}"})
+            
+            # Test password change
+            password_data = {
+                "currentPassword": "temppass123",
+                "newPassword": "newtemppass123"
+            }
+            
+            response = temp_session.post(f"{BACKEND_URL}/profile/change-password", json=password_data)
             self.log(f"Change password response status: {response.status_code}")
             
             if response.status_code == 200:
                 data = response.json()
                 if data.get("message"):
                     self.log("✅ Change password successful")
-                    
-                    # Change it back for other tests
-                    revert_data = {
-                        "currentPassword": "newdemo123",
-                        "newPassword": DEMO_USER_PASSWORD
-                    }
-                    revert_response = self.user_session.post(f"{BACKEND_URL}/profile/change-password", json=revert_data)
-                    if revert_response.status_code == 200:
-                        self.log("✅ Password reverted successfully")
-                    
                     return True
                 else:
                     self.log("❌ Change password failed: Invalid response", "ERROR")
