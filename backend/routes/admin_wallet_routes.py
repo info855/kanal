@@ -155,7 +155,7 @@ async def manual_balance_adjustment(
     current_user: dict = Depends(get_current_admin)
 ):
     # Get user
-    user = await db.users.find_one({"_id": adjustment.userId})
+    user = await db.users.find_one({"_id": ObjectId(adjustment.userId)})
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
