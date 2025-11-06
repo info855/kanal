@@ -44,7 +44,7 @@ async def get_recipients(
     """
     try:
         recipients = await db.saved_recipients.find({
-            "userId": current_user["_id"]
+            "userId": current_user["userId"]
         }).sort("lastUsedAt", -1).limit(limit).to_list(length=limit)
         
         # Convert _id to string
