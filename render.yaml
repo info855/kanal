@@ -5,13 +5,14 @@ services:
     env: python
     region: frankfurt
     buildCommand: |
-      echo "==> Build Started - Version 2.3"
+      echo "==> Build Started - Version 2.4"
       echo "==> Building Backend..."
       pip install -r backend/requirements.txt
       echo "==> Building Frontend..."
       cd frontend
       yarn install --frozen-lockfile
-      yarn build
+      echo "==> Injecting production URL: https://enucuzakargo.onrender.com"
+      REACT_APP_BACKEND_URL=https://enucuzakargo.onrender.com yarn build
       echo "==> Frontend build complete!"
       ls -la build/ || echo "Build directory not found!"
       cd ..
