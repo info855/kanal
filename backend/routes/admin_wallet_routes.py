@@ -173,7 +173,7 @@ async def manual_balance_adjustment(
     
     # Update user balance
     await db.users.update_one(
-        {"_id": adjustment.userId},
+        {"_id": ObjectId(adjustment.userId)},
         {"$set": {"balance": new_balance}}
     )
     
