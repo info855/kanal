@@ -88,6 +88,29 @@ Yeni render.yaml versiyonu:
 - [x] Backend frontend serve konfigürasyonu doğrulandı
 
 ---
+
+## 🆕 İkinci Fix: /api/settings 500 Error (2025-01-06)
+
+### Sorun
+İlk deploy sonrası site beyaz ekran gösteriyordu çünkü `/api/settings` endpoint'i 500 Internal Server Error veriyordu.
+
+### Kök Neden
+- `SiteSettings` model `datetime.utcnow()` kullanıyordu
+- MongoDB datetime objelerini saklıyordu
+- FastAPI response serialize ederken datetime objelerini JSON'a çeviremiyordu
+
+### Çözüm
+1. `settings_routes.py` - datetime'ı ISO string'e çeviren error handling eklendi
+2. `models.py` - `SiteSettings.updatedAt` field tipi `datetime` → `str` (ISO format) değiştirildi
+3. Her iki endpoint'e try-catch ve default settings fallback eklendi
+
+### Yerel Test
+```bash
+curl http://localhost:8001/api/settings | jq '.settings.siteName'
+# Output: "En Ucuza Kargo Test" ✅
+```
+
+---
 **Tarih**: 2025-01-06
 **Fix Durumu**: ✅ Hazır - Deploy edilebilir
-**Beklenen Sonuç**: Zero localhost referansları, tam fonksiyonel production app
+**Beklenen Sonuç**: Zero localhost referansları, /api/settings çalışır, tam fonksiyonel production app
