@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import { Button } from '../components/ui/button';
@@ -7,8 +7,8 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { ArrowLeft, Package } from 'lucide-react';
-import { shippingAPI, ordersAPI } from '../services/api';
+import { ArrowLeft, Package, Search } from 'lucide-react';
+import { shippingAPI, ordersAPI, recipientsAPI } from '../services/api';
 import { toast } from '../hooks/use-toast';
 
 const NewShipmentPage = () => {
@@ -29,6 +29,12 @@ const NewShipmentPage = () => {
     codAmount: '',
     description: ''
   });
+  
+  // Autocomplete states
+  const [searchResults, setSearchResults] = useState([]);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const autocompleteRef = useRef(null);
 
   useEffect(() => {
     fetchShippingCompanies();
