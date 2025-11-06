@@ -267,7 +267,7 @@ class SiteSettings(BaseModel):
     footerSections: List[FooterSection] = []
     aboutPage: str = ""
     bankInfo: BankInfo = BankInfo()
-    updatedAt: datetime = Field(default_factory=datetime.utcnow)
+    updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 class SiteSettingsUpdate(BaseModel):
     siteName: Optional[str] = None
