@@ -55,6 +55,23 @@ class Recipient(BaseModel):
     district: str
     address: str
 
+# Saved Recipient Models (for autocomplete)
+class SavedRecipient(BaseModel):
+    id: str = Field(alias="_id")
+    userId: str
+    name: str
+    phone: str
+    city: str
+    district: str
+    address: str
+    usageCount: int = 0
+    lastUsedAt: datetime = Field(default_factory=datetime.utcnow)
+    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
 # Location Models
 class Location(BaseModel):
     lat: float
