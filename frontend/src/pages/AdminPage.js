@@ -202,6 +202,7 @@ const AdminPage = () => {
             <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
             <TabsTrigger value="chat">Canlı Destek</TabsTrigger>
             <TabsTrigger value="wallet">Cüzdan Yönetimi</TabsTrigger>
+            <TabsTrigger value="profile-requests">Profil Talepleri</TabsTrigger>
             <TabsTrigger value="analytics">Analizler</TabsTrigger>
           </TabsList>
 
