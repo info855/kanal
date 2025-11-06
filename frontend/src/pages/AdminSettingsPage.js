@@ -159,7 +159,11 @@ const AdminSettingsPage = () => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center space-x-2">
-                <Settings className="w-8 h-8 text-pink-600" />
+                {settings?.logo ? (
+                  <img src={settings.logo} alt={settings.siteName || 'Logo'} className="h-8 w-auto" />
+                ) : (
+                  <Settings className="w-8 h-8 text-pink-600" />
+                )}
                 <span className="text-2xl font-bold text-gray-900">Site Ayarları</span>
               </div>
             </div>
