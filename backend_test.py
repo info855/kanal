@@ -1008,9 +1008,8 @@ class ComprehensiveBackendTester:
         
         # Create another request to reject
         update_data = {
-            "type": "phone",
-            "newValue": "+90 555 999 8888",
-            "reason": "Test phone update for rejection"
+            "updateType": "phone",
+            "newValue": "+90 555 999 8888"
         }
         
         try:
