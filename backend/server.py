@@ -80,6 +80,7 @@ app.include_router(media_routes.router)
 app.include_router(wallet_routes.router)
 app.include_router(admin_wallet_routes.router)
 app.include_router(recipient_routes.router)
+app.include_router(profile_routes.router)
 
 # Serve React frontend build files
 frontend_build_dir = Path(__file__).parent.parent / "frontend" / "build"
