@@ -493,9 +493,7 @@ test_plan:
     - "Chat Widget System"
     - "Wallet System Frontend"
     - "Media Library Integration"
-  stuck_tasks:
-    - "Admin Panel Access"
-    - "Chat Widget System"
+  stuck_tasks: []
   test_all: true
   test_priority: "high_first"
 
