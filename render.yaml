@@ -5,12 +5,14 @@ services:
     env: python
     region: frankfurt
     buildCommand: |
-      echo "==> Build Started - Version 2.1"
+      echo "==> Build Started - Version 2.2"
       echo "==> Building Backend..."
       pip install -r backend/requirements.txt
       echo "==> Building Frontend..."
       cd frontend
       yarn install --frozen-lockfile
+      echo "==> Setting REACT_APP_BACKEND_URL to $RENDER_EXTERNAL_URL"
+      export REACT_APP_BACKEND_URL=$RENDER_EXTERNAL_URL
       yarn build
       echo "==> Frontend build complete!"
       ls -la build/ || echo "Build directory not found!"
