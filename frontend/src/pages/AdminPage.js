@@ -173,7 +173,11 @@ const AdminPage = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Package className="w-8 h-8 text-pink-600" />
+              {settings?.logo ? (
+                <img src={settings.logo} alt={settings.siteName || 'Logo'} className="h-8 w-auto" />
+              ) : (
+                <Package className="w-8 h-8 text-pink-600" />
+              )}
               <span className="text-2xl font-bold text-gray-900">Admin Panel</span>
             </div>
             <div className="flex items-center space-x-4">
