@@ -170,13 +170,11 @@ const ChatWidget = () => {
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[75%] rounded-lg px-4 py-2 ${
-                      msg.sender === 'user'
-                        ? 'bg-pink-600 text-white'
-                        : msg.sender === 'bot'
-                        ? 'bg-gray-200 text-gray-800'
-                        : 'bg-blue-100 text-gray-800'
-                    }`}
+                    className="max-w-[75%] rounded-lg px-4 py-2"
+                    style={{
+                      backgroundColor: msg.sender === 'user' ? '#DB2777' : msg.sender === 'bot' ? '#E5E7EB' : '#DBEAFE',
+                      color: msg.sender === 'user' ? 'white' : '#1F2937'
+                    }}
                   >
                     {msg.sender !== 'user' && (
                       <p className="text-xs font-semibold mb-1">
