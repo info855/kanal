@@ -759,6 +759,8 @@ class ComprehensiveBackendTester:
         temp_file.close()
         return temp_file.name
     
+    # ========== MEDIA LIBRARY TESTS ==========
+    
     def test_media_upload_single(self):
         """Test uploading a single image"""
         self.log("Testing single media upload...")
@@ -773,7 +775,7 @@ class ComprehensiveBackendTester:
         try:
             with open(test_image_path, 'rb') as f:
                 files = {'files': ('test_image.jpg', f, 'image/jpeg')}
-                response = self.session.post(f"{BACKEND_URL}/media/upload", files=files)
+                response = self.admin_session.post(f"{BACKEND_URL}/media/upload", files=files)
             
             self.log(f"Single upload response status: {response.status_code}")
             
