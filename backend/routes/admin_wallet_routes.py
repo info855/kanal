@@ -69,7 +69,7 @@ async def approve_deposit_request(
     
     # Update user balance
     await db.users.update_one(
-        {"_id": deposit_request["userId"]},
+        {"_id": ObjectId(deposit_request["userId"])},
         {"$set": {"balance": new_balance}}
     )
     
