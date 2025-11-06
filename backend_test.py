@@ -884,7 +884,7 @@ class ComprehensiveBackendTester:
         try:
             with open(temp_file.name, 'rb') as f:
                 files = {'files': ('test_file.txt', f, 'text/plain')}
-                response = self.session.post(f"{BACKEND_URL}/media/upload", files=files)
+                response = self.admin_session.post(f"{BACKEND_URL}/media/upload", files=files)
             
             self.log(f"Validation test response status: {response.status_code}")
             
