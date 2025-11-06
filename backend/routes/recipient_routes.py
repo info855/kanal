@@ -95,7 +95,7 @@ async def save_recipient(
             recipient_id = str(uuid.uuid4())
             recipient = {
                 "_id": recipient_id,
-                "userId": current_user["_id"],
+                "userId": current_user["userId"],
                 "name": recipient_data["name"],
                 "phone": recipient_data["phone"],
                 "city": recipient_data.get("city", ""),
