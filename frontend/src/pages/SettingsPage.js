@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { ArrowLeft, Settings, CreditCard } from 'lucide-react';
-import { usersAPI } from '../services/api';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Badge } from '../components/ui/badge';
+import { ArrowLeft, Settings, Lock, Mail, Phone, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { profileAPI } from '../services/api';
 import { toast } from '../hooks/use-toast';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { user, updateBalance, updateUser } = useAuth();
-  const [balanceAmount, setBalanceAmount] = useState('');
+  const { user } = useAuth();
+  const { settings: siteSettings } = useSettings();
   const [loading, setLoading] = useState(false);
+  const [updateRequests, setUpdateRequests] = useState([]);
+  
+  // Password change state
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  
+  // Email/Phone update state
+  const [emailUpdate, setEmailUpdate] = useState('');
+  const [phoneUpdate, setPhoneUpdate] = useState('');
 
   const handleBalanceUpdate = async (e) => {
     e.preventDefault();
