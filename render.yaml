@@ -11,8 +11,8 @@ services:
       echo "==> Building Frontend..."
       cd frontend
       yarn install --frozen-lockfile
-      echo "==> Injecting production URL: https://enucuzakargo.onrender.com"
-      REACT_APP_BACKEND_URL=https://enucuzakargo.onrender.com yarn build
+      echo "==> Injecting production URL: https://kargo-hlrv.onrender.com"
+      REACT_APP_BACKEND_URL=https://kargo-hlrv.onrender.com yarn build
       echo "==> Frontend build complete!"
       ls -la build/ || echo "Build directory not found!"
       cd ..
