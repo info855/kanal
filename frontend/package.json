@@ -57,7 +57,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-https://kargo-son-hali.onrender.com} craco build",
+    "build": "craco build",
     "test": "craco test"
   },
   "browserslist": {
