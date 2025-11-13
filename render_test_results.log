@@ -1,0 +1,34 @@
+[INFO] ================================================================================
+[INFO] STARTING RENDER DEPLOYMENT READINESS TESTS
+[INFO] ================================================================================
+[INFO] 
+🔍 CRITICAL DEPLOYMENT TESTS
+[INFO] ----------------------------------------
+[INFO] Testing API health check...
+[INFO] Health check response status: 200
+[INFO] ✅ Health check successful: En Ucuza Kargo API
+[INFO] Testing CORS headers...
+[WARNING] ⚠️ Missing CORS headers: ['access-control-allow-origin', 'access-control-allow-methods', 'access-control-allow-headers']
+[INFO] Testing database connection...
+[ERROR] ❌ Database connection issue: 500
+[INFO] 
+🔐 AUTHENTICATION TESTS
+[INFO] ----------------------------------------
+[INFO] Testing user registration...
+[INFO] Registration response status: 500
+[ERROR] ❌ Registration failed with status 500: Internal Server Error
+[INFO] Testing admin login...
+[INFO] Admin login response status: 500
+[ERROR] ❌ Admin login failed with status 500: Internal Server Error
+[INFO] Testing user login...
+[INFO] User login response status: 500
+[ERROR] ❌ User login failed with status 500: Internal Server Error
+[INFO] Testing get current user...
+[ERROR] ❌ No user token available
+[INFO] 
+⚙️ CORE FEATURE TESTS
+[INFO] ----------------------------------------
+[INFO] Testing shipping companies listing...
+[INFO] Shipping companies response status: 500
+[ERROR] ❌ Shipping companies list failed with status 500: Internal Server Error
+[INFO] Testing settings API...
